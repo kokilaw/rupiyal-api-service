@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    url: jdbc:postgresql://${DATABASE_URL}:${DATABASE_PORT}/rupiyal_db
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
