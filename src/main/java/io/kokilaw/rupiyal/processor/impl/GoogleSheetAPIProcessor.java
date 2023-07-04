@@ -1,6 +1,6 @@
 package io.kokilaw.rupiyal.processor.impl;
 
-import io.kokilaw.rupiyal.common.model.ProcessorType;
+import io.kokilaw.rupiyal.dto.ProcessorType;
 import io.kokilaw.rupiyal.processor.CurrencyFetchProcessor;
 import io.kokilaw.rupiyal.processor.CurrencyFetchProcessorRegistry;
 import jakarta.annotation.PostConstruct;

@@ -1,4 +1,4 @@
-package io.kokilaw.rupiyal.common.dto;
+package io.kokilaw.rupiyal.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

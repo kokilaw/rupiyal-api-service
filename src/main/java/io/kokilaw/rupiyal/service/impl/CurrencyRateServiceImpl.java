@@ -1,7 +1,7 @@
 package io.kokilaw.rupiyal.service.impl;
 
-import io.kokilaw.rupiyal.common.dto.CurrencyRateDTO;
-import io.kokilaw.rupiyal.common.model.CurrencyRateType;
+import io.kokilaw.rupiyal.dto.CurrencyRateDTO;
+import io.kokilaw.rupiyal.dto.CurrencyRateType;
 import io.kokilaw.rupiyal.repository.BankRepository;
 import io.kokilaw.rupiyal.repository.BuyingRateRepository;
 import io.kokilaw.rupiyal.repository.SellingRateRepository;

@@ -1,6 +1,6 @@
 package io.kokilaw.rupiyal.processor;
 
-import io.kokilaw.rupiyal.common.model.ProcessorType;
+import io.kokilaw.rupiyal.dto.ProcessorType;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

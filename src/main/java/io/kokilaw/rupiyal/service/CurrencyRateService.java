@@ -1,7 +1,7 @@
 package io.kokilaw.rupiyal.service;
 
-import io.kokilaw.rupiyal.common.dto.CurrencyRateDTO;
-import io.kokilaw.rupiyal.common.model.CurrencyRateType;
+import io.kokilaw.rupiyal.dto.CurrencyRateDTO;
+import io.kokilaw.rupiyal.dto.CurrencyRateType;
 
 import java.util.List;
 
