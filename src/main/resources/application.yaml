@@ -8,9 +8,3 @@ spring:
     show-sql: false
     hibernate:
       ddl-auto: validate
-
-google-sheet:
-  application.name: sample
-  credentials:
-    file.path: /credentials.json
-    tokens.path: tokens
