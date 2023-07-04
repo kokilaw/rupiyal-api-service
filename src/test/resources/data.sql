@@ -1,4 +1,4 @@
-INSERT INTO bank (bank_code, bank_short_name, bank_long_name)
+INSERT INTO bank (bank_code, short_name, long_name)
 VALUES ('NTB', 'NTB', 'Nations Truest Bank'),
        ('COMBANK', 'COMBANK', 'Commercial Bank'),
        ('HNB', 'HNB', 'Hatton National Bank'),

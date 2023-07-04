@@ -21,10 +21,10 @@ public class BankEntity {
     @Column(name="bank_code")
     private String bankCode;
 
-    @Column(name="bank_short_name")
-    private String bankShortName;
+    @Column(name="short_name")
+    private String shortName;
 
-    @Column(name="bank_long_name")
-    private String bankLongName;
+    @Column(name="long_name")
+    private String longName;
 
 }

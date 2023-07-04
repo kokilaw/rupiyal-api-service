@@ -26,7 +26,7 @@ public class TaskController {
 
     @PostMapping("/fetch")
     public ResponseEntity<Void> executeFetchTask(@RequestBody TaskDTO taskDTO){
-        currencyFetchProcessorRegistry.currencyFetchProcessor(taskDTO.getProcessorType())
+        currencyFetchProcessorRegistry.currencyFetchProcessor(taskDTO.processorType())
                 .execute();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
