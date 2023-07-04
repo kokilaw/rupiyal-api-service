@@ -1,8 +1,8 @@
 CREATE TABLE bank
 (
     bank_code       varchar(20) PRIMARY KEY,
-    bank_short_name varchar(10) NOT NULL,
-    bank_long_name  varchar(25) NOT NULL
+    short_name varchar(10) NOT NULL,
+    long_name  varchar(25) NOT NULL
 );
 
 CREATE TABLE buying_rate
