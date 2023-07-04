@@ -40,16 +40,17 @@ public class CurrencyRateServiceImpl implements CurrencyRateService {
 
     @Override
     public void saveCurrencyRates(CurrencyRateType currencyRateType, List<CurrencyRateDTO> currencyRates) {
-        Map<String, BankEntity> bankEntityCache = new HashMap<>();
         if (CurrencyRateType.BUYING == currencyRateType) {
-            saveBuyingCurrencyRates(currencyRates, bankEntityCache);
+            saveBuyingCurrencyRates(currencyRates);
         } else {
-            saveSellingCurrencyRates(currencyRates, bankEntityCache);
+            saveSellingCurrencyRates(currencyRates);
         }
     }
 
-    private void saveSellingCurrencyRates(List<CurrencyRateDTO> currencyRates, Map<String, BankEntity> bankEntityCache) {
+    private void saveSellingCurrencyRates(List<CurrencyRateDTO> currencyRates) {
         Map<String, List<CurrencyRateDTO>> ratesByBankCode = getRatesByBankCode(currencyRates);
+
+        Map<String, BankEntity> bankEntityCache = new HashMap<>();
         ratesByBankCode.forEach((bankCode, rates) -> {
 
             if (!bankEntityCache.containsKey(bankCode)) {
@@ -73,8 +74,10 @@ public class CurrencyRateServiceImpl implements CurrencyRateService {
         });
     }
 
-    private void saveBuyingCurrencyRates(List<CurrencyRateDTO> currencyRates, Map<String, BankEntity> bankEntityCache) {
+    private void saveBuyingCurrencyRates(List<CurrencyRateDTO> currencyRates) {
         Map<String, List<CurrencyRateDTO>> ratesByBankCode = getRatesByBankCode(currencyRates);
+
+        Map<String, BankEntity> bankEntityCache = new HashMap<>();
         ratesByBankCode.forEach((bankCode, rates) -> {
 
             if (!bankEntityCache.containsKey(bankCode)) {
