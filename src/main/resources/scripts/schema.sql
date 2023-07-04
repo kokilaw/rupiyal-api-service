@@ -1,6 +1,6 @@
 CREATE TABLE bank
 (
-    bank_code       varchar(20) PRIMARY KEY,
+    bank_code  varchar(20) PRIMARY KEY,
     short_name varchar(10) NOT NULL,
     long_name  varchar(25) NOT NULL
 );
