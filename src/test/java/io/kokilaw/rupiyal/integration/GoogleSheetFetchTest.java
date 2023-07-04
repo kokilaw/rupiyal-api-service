@@ -2,6 +2,8 @@ package io.kokilaw.rupiyal.integration;
 
 import io.kokilaw.rupiyal.RupiyalApiServiceApplication;
 import io.kokilaw.rupiyal.dto.BankDTO;
+import io.kokilaw.rupiyal.dto.ProcessorType;
+import io.kokilaw.rupiyal.dto.TaskDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +49,17 @@ public class GoogleSheetFetchTest {
         assertTrue(bankEntriesByBankCode.containsKey("COMBANK"));
         assertTrue(bankEntriesByBankCode.containsKey("HNB"));
         assertTrue(bankEntriesByBankCode.containsKey("SAMPATH"));
+    }
+
+    @Test
+    @DisplayName("Currency data is fetched and saved when google sheet fetch is initiated")
+    public void whenGoogleSheetFetchInitiated_currencyDataIsFetchedAndSaved() {
+
+        String requestPath = "/tasks/fetch";
+        String requestUrl = String.format("http://localhost:%d%s", this.port, requestPath);
+        TaskDTO payload = new TaskDTO(ProcessorType.GOOGLE_SHEET_API);
+        this.restTemplate.postForEntity(requestUrl, payload, Void.class);
+
     }
 
 }

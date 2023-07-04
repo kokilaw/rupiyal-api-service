@@ -1,0 +1,19 @@
+{
+  "properties": [
+    {
+      "name": "google-sheet.credentials.tokens.path",
+      "type": "java.lang.String",
+      "description": "Path for Google OAuth client tokens."
+    },
+    {
+      "name": "google-sheet.application.name",
+      "type": "java.lang.String",
+      "description": "Application name related to the google sheet."
+    },
+    {
+      "name": "google-sheet.credentials.file.path",
+      "type": "java.lang.String",
+      "description": "Path for the credentials.json."
+    }
+  ]
+}
