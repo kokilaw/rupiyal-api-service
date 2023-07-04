@@ -8,3 +8,8 @@ spring:
     show-sql: false
     hibernate:
       ddl-auto: validate
+
+currency-rates-api:
+  api-url: https://script.google.com/macros/s/AKfycbw898vRhVlDf9scBwt7kk4Phis6G3iWrr8IP7ESfuK1zPJE7_yKqGH0cMnKFImFYc0X/exec
+  read-timeout: 3000
+  connect-timeout: 3000

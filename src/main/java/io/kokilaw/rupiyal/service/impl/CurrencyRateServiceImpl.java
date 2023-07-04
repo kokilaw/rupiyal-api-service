@@ -40,22 +40,30 @@ public class CurrencyRateServiceImpl implements CurrencyRateService {
 
     @Override
     public void saveCurrencyRates(CurrencyRateType currencyRateType, List<CurrencyRateDTO> currencyRates) {
+        Map<String, BankEntity> bankEntityCache = new HashMap<>();
         if (CurrencyRateType.BUYING == currencyRateType) {
-            saveBuyingCurrencyRates(currencyRates);
+            saveBuyingCurrencyRates(currencyRates, bankEntityCache);
         } else {
-            saveSellingCurrencyRates(currencyRates);
+            saveSellingCurrencyRates(currencyRates, bankEntityCache);
         }
     }
 
-    private void saveSellingCurrencyRates(List<CurrencyRateDTO> currencyRates) {
+    private void saveSellingCurrencyRates(List<CurrencyRateDTO> currencyRates, Map<String, BankEntity> bankEntityCache) {
         Map<String, List<CurrencyRateDTO>> ratesByBankCode = getRatesByBankCode(currencyRates);
         ratesByBankCode.forEach((bankCode, rates) -> {
-            BankEntity bankEntity = bankRepository.findById(bankCode)
-                    .orElseThrow(() -> new RuntimeException(String.format("Bank not found for code - %s", bankCode)));
+
+            if (!bankEntityCache.containsKey(bankCode)) {
+                bankEntityCache.put(
+                        bankCode,
+                        bankRepository.findById(bankCode)
+                                .orElseThrow(() -> new RuntimeException(String.format("Bank not found for code - %s", bankCode)))
+                );
+            }
+
             List<SellingRateEntity> sellingRateEntities = rates
                     .stream()
                     .map(rateDTO -> SellingRateEntity.builder()
-                            .bank(bankEntity)
+                            .bank(bankEntityCache.get(bankCode))
                             .rate(rateDTO.rate())
                             .currencyCode(rateDTO.currencyCode())
                             .date(rateDTO.date())
@@ -65,15 +73,22 @@ public class CurrencyRateServiceImpl implements CurrencyRateService {
         });
     }
 
-    private void saveBuyingCurrencyRates(List<CurrencyRateDTO> currencyRates) {
+    private void saveBuyingCurrencyRates(List<CurrencyRateDTO> currencyRates, Map<String, BankEntity> bankEntityCache) {
         Map<String, List<CurrencyRateDTO>> ratesByBankCode = getRatesByBankCode(currencyRates);
         ratesByBankCode.forEach((bankCode, rates) -> {
-            BankEntity bankEntity = bankRepository.findById(bankCode)
-                    .orElseThrow(() -> new RuntimeException(String.format("Bank not found for code - %s", bankCode)));
+
+            if (!bankEntityCache.containsKey(bankCode)) {
+                bankEntityCache.put(
+                        bankCode,
+                        bankRepository.findById(bankCode)
+                                .orElseThrow(() -> new RuntimeException(String.format("Bank not found for code - %s", bankCode)))
+                );
+            }
+
             List<BuyingRateEntity> buyingRateEntities = rates
                     .stream()
                     .map(rateDTO -> BuyingRateEntity.builder()
-                            .bank(bankEntity)
+                            .bank(bankEntityCache.get(bankCode))
                             .rate(rateDTO.rate())
                             .currencyCode(rateDTO.currencyCode())
                             .date(rateDTO.date())
