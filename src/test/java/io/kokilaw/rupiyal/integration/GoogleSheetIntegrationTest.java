@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 
 @SpringBootTest(classes = RupiyalApiServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class GoogleSheetFetchTest {
+public class GoogleSheetIntegrationTest {
 
     @LocalServerPort
     private int port;
@@ -44,11 +44,12 @@ public class GoogleSheetFetchTest {
         Map<String, BankDTO> bankEntriesByBankCode = Arrays.stream(Objects.requireNonNull(response.getBody()))
                 .collect(Collectors.toMap(BankDTO::bankCode, Function.identity()));
 
-        assertEquals(4, bankEntriesByBankCode.keySet().size());
+        assertEquals(5, bankEntriesByBankCode.keySet().size());
         assertTrue(bankEntriesByBankCode.containsKey("NTB"));
         assertTrue(bankEntriesByBankCode.containsKey("COMBANK"));
         assertTrue(bankEntriesByBankCode.containsKey("HNB"));
         assertTrue(bankEntriesByBankCode.containsKey("SAMPATH"));
+        assertTrue(bankEntriesByBankCode.containsKey("BOC"));
     }
 
     @Test
