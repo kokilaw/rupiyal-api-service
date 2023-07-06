@@ -20,7 +20,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "selling_rate")
+@Table(name = "selling_rate", uniqueConstraints = @UniqueConstraint(
+        name = "currency_entry_unique_key",
+        columnNames = {"bank_code", "currency_code", "date", "rate"}
+))
 public class SellingRateEntity {
 
     @Id

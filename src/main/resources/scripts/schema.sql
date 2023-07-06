@@ -14,7 +14,8 @@ CREATE TABLE buying_rate
     created_date  timestamp without time zone NOT NULL,
     updated_date  timestamp without time zone NOT NULL,
     bank_code     varchar(20),
-    FOREIGN KEY (bank_code) REFERENCES bank (bank_code)
+    FOREIGN KEY (bank_code) REFERENCES bank (bank_code),
+    CONSTRAINT currency_entry_unique_key UNIQUE (bank_code, currency_code, date, rate)
 );
 
 CREATE TABLE selling_rate
@@ -26,5 +27,6 @@ CREATE TABLE selling_rate
     created_date  timestamp without time zone NOT NULL,
     updated_date  timestamp without time zone NOT NULL,
     bank_code     varchar(20),
-    FOREIGN KEY (bank_code) REFERENCES bank (bank_code)
+    FOREIGN KEY (bank_code) REFERENCES bank (bank_code),
+    CONSTRAINT currency_entry_unique_key UNIQUE (bank_code, currency_code, date, rate)
 );
