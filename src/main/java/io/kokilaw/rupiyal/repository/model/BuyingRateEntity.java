@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "buying_rate", uniqueConstraints = @UniqueConstraint(
-        name = "currency_entry_unique_key",
+        name = "buying_currency_entry_unique_key",
         columnNames = {"bank_code", "currency_code", "date", "rate"}
 ))
 public class BuyingRateEntity {
