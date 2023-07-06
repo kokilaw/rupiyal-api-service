@@ -1,0 +1,19 @@
+{
+  "properties": [
+    {
+      "name": "currency-rates-api.api-url",
+      "type": "java.lang.String",
+      "description": "Description for currency-rates-api.api-url."
+    },
+    {
+      "name": "currency-rates-api.read-timeout",
+      "type": "java.lang.String",
+      "description": "Description for currency-rates-api.read-timeout."
+    },
+    {
+      "name": "currency-rates-api.connect-timeout",
+      "type": "java.lang.String",
+      "description": "Description for currency-rates-api.connect-timeout."
+    }
+  ]
+}
