@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Created by kokilaw on 2023-06-13
@@ -41,10 +42,12 @@ class BuyingRateRepositoryTest {
                 .rate(new BigDecimal("294.50"))
                 .build();
 
-        BuyingRateEntity savedEntry = buyingRateRepository.save(entryToBeSaved);
+        BuyingRateEntity savedEntry = buyingRateRepository.saveAndFlush(entryToBeSaved);
         BuyingRateEntity fetchedSavedEntry = buyingRateRepository.findById(savedEntry.getId())
                 .orElseThrow(() -> new RuntimeException("Entry not found!"));
         assertEquals(0, entryToBeSaved.getRate().compareTo(fetchedSavedEntry.getRate()));
+        assertNotNull(savedEntry.getUpdatedAt());
+        assertNotNull(savedEntry.getCreatedAt());
 
 
     }
