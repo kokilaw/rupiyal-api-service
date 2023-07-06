@@ -31,10 +31,10 @@ public class SellingRateEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "currency_code")
+    @Column(name = "currency_code", length = 3)
     private String currencyCode;
 
-    @Column(name = "rate")
+    @Column(name = "rate", precision = 19, scale = 4)
     private BigDecimal rate;
 
     @Column(name = "date")
