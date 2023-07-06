@@ -4,6 +4,7 @@ import io.kokilaw.rupiyal.RupiyalApiServiceApplication;
 import io.kokilaw.rupiyal.dto.BankDTO;
 import io.kokilaw.rupiyal.dto.ProcessorType;
 import io.kokilaw.rupiyal.dto.TaskDTO;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -25,7 +27,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Created by kokilaw on 2023-07-04
  */
 
-@SpringBootTest(classes = RupiyalApiServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+        classes = RupiyalApiServiceApplication.class,
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+)
 public class GoogleSheetIntegrationTest {
 
     @LocalServerPort
@@ -34,9 +39,14 @@ public class GoogleSheetIntegrationTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    @BeforeAll
+    public static void setup() {
+    }
+
     @Test
     @DisplayName("Required test data is initialised when application starts")
-    public void whenApplicationStarts_testDataIsInitialised() {
+    @Sql({"classpath:data.sql"})
+    void whenApplicationStarts_testDataIsInitialised() {
         String requestPath = "/banks";
         String requestUrl = String.format("http://localhost:%d%s", this.port, requestPath);
         ResponseEntity<BankDTO[]> response = this.restTemplate.getForEntity(requestUrl, BankDTO[].class);
@@ -54,7 +64,7 @@ public class GoogleSheetIntegrationTest {
 
     @Test
     @DisplayName("Currency data is fetched and saved when google sheet fetch is initiated")
-    public void whenGoogleSheetFetchInitiated_currencyDataIsFetchedAndSaved() {
+    void whenGoogleSheetFetchInitiated_currencyDataIsFetchedAndSaved() {
 
         String requestPath = "/tasks/fetch";
         String requestUrl = String.format("http://localhost:%d%s", this.port, requestPath);

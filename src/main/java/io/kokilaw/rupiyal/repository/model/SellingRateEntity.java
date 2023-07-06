@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "selling_rate", uniqueConstraints = @UniqueConstraint(
-        name = "currency_entry_unique_key",
+        name = "selling_currency_entry_unique_key",
         columnNames = {"bank_code", "currency_code", "date", "rate"}
 ))
 public class SellingRateEntity {
@@ -31,10 +31,10 @@ public class SellingRateEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "currency_code")
+    @Column(name = "currency_code", length = 3)
     private String currencyCode;
 
-    @Column(name = "rate")
+    @Column(name = "rate", precision = 19, scale = 4)
     private BigDecimal rate;
 
     @Column(name = "date")
