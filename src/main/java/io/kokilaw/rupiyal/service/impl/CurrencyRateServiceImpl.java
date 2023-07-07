@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Created by kokilaw on 2023-06-13
@@ -69,7 +68,7 @@ public class CurrencyRateServiceImpl implements CurrencyRateService {
                             .currencyCode(rateDTO.currencyCode())
                             .date(rateDTO.date())
                             .build())
-                    .collect(Collectors.toList());
+                    .toList();
             sellingRateRepository.saveAll(sellingRateEntities);
         });
     }
@@ -96,7 +95,7 @@ public class CurrencyRateServiceImpl implements CurrencyRateService {
                             .currencyCode(rateDTO.currencyCode())
                             .date(rateDTO.date())
                             .build())
-                    .collect(Collectors.toList());
+                    .toList();
             buyingRateRepository.saveAll(buyingRateEntities);
         });
     }

@@ -16,7 +16,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by kokilaw on 2023-07-04
@@ -68,7 +67,7 @@ public class CurrencyRatesAPIClientImpl implements CurrencyRatesAPIClient {
                         .map(rate -> new TempRate(rate.currencyCode(), rate.rate(), bankRates.internalBankCode())))
                 .filter(tempRate -> StringUtils.isNotEmpty(tempRate.rate()) && !tempRate.rate().contains("-"))
                 .map(tempRate -> new CurrencyRateDTO(LocalDate.now(), new BigDecimal(tempRate.rate()), tempRate.currencyCode(), tempRate.bankCode()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private record BankRates(String internalBankCode, List<Rate> rates) {

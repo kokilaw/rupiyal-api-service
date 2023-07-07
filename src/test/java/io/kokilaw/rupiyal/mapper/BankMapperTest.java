@@ -14,7 +14,7 @@ class BankMapperTest {
 
     @Test
     @DisplayName("Should return correct BankDTO when BankEntity is provided")
-    public void givenBankEntity_whenMaps_thenProducesCorrectBankDto() {
+    void givenBankEntity_whenMaps_thenProducesCorrectBankDto() {
         BankEntity bankEntity = BankEntity.builder()
                 .bankCode("NTB")
                 .longName("Nations Trust Bank")

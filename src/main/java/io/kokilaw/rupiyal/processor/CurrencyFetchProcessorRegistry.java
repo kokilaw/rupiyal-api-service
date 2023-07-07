@@ -1,9 +1,10 @@
 package io.kokilaw.rupiyal.processor;
 
 import io.kokilaw.rupiyal.dto.ProcessorType;
+import io.kokilaw.rupiyal.exception.NotFoundException;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 /**
@@ -12,7 +13,7 @@ import java.util.Map;
 @Component
 public class CurrencyFetchProcessorRegistry {
 
-    private final Map<ProcessorType, CurrencyFetchProcessor> registry = new HashMap<>();
+    private final Map<ProcessorType, CurrencyFetchProcessor> registry = new EnumMap<>(ProcessorType.class);
 
     public void register(CurrencyFetchProcessor currencyFetchProcessor) {
         this.registry.put(currencyFetchProcessor.getType(), currencyFetchProcessor);
@@ -21,7 +22,7 @@ public class CurrencyFetchProcessorRegistry {
     public CurrencyFetchProcessor currencyFetchProcessor(ProcessorType type) {
         CurrencyFetchProcessor currencyFetchProcessor = this.registry.get(type);
         if (currencyFetchProcessor == null) {
-            throw new RuntimeException(String.format("No processor found for provided type - %s", type));
+            throw new NotFoundException(String.format("No processor found for provided type - %s", type));
         }
         return currencyFetchProcessor;
     }
