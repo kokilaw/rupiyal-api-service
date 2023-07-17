@@ -4,8 +4,6 @@ import io.kokilaw.rupiyal.RupiyalApiServiceApplication;
 import io.kokilaw.rupiyal.dto.BankDTO;
 import io.kokilaw.rupiyal.dto.ProcessorType;
 import io.kokilaw.rupiyal.dto.TaskDTO;
-import io.kokilaw.rupiyal.repository.BuyingRateRepository;
-import io.kokilaw.rupiyal.repository.model.BuyingRateEntity;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
@@ -40,9 +37,6 @@ public class GoogleSheetIntegrationTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
-
-    @Autowired
-    private BuyingRateRepository buyingRateRepository;
 
 
     @BeforeAll
