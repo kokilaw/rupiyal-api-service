@@ -2,6 +2,7 @@ package io.kokilaw.rupiyal.service.impl;
 
 import io.kokilaw.rupiyal.dto.CurrencyRateDTO;
 import io.kokilaw.rupiyal.dto.CurrencyRateType;
+import io.kokilaw.rupiyal.exception.NotFoundException;
 import io.kokilaw.rupiyal.repository.BankRepository;
 import io.kokilaw.rupiyal.repository.BuyingRateRepository;
 import io.kokilaw.rupiyal.repository.SellingRateRepository;
@@ -83,7 +84,7 @@ public class CurrencyRateServiceImpl implements CurrencyRateService {
                 bankEntityCache.put(
                         bankCode,
                         bankRepository.findById(bankCode)
-                                .orElseThrow(() -> new RuntimeException(String.format("Bank not found for code - %s", bankCode)))
+                                .orElseThrow(() -> new NotFoundException(String.format("Bank not found for code - %s", bankCode)))
                 );
             }
 

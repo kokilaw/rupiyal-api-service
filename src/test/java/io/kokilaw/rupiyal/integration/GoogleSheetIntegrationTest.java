@@ -4,6 +4,8 @@ import io.kokilaw.rupiyal.RupiyalApiServiceApplication;
 import io.kokilaw.rupiyal.dto.BankDTO;
 import io.kokilaw.rupiyal.dto.ProcessorType;
 import io.kokilaw.rupiyal.dto.TaskDTO;
+import io.kokilaw.rupiyal.repository.BuyingRateRepository;
+import io.kokilaw.rupiyal.repository.model.BuyingRateEntity;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,13 +17,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Created by kokilaw on 2023-07-04
@@ -38,6 +40,10 @@ public class GoogleSheetIntegrationTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
+
+    @Autowired
+    private BuyingRateRepository buyingRateRepository;
+
 
     @BeforeAll
     public static void setup() {
@@ -69,7 +75,7 @@ public class GoogleSheetIntegrationTest {
         String requestPath = "/tasks/fetch";
         String requestUrl = String.format("http://localhost:%d%s", this.port, requestPath);
         TaskDTO payload = new TaskDTO(ProcessorType.GOOGLE_SHEET_API);
-        this.restTemplate.postForEntity(requestUrl, payload, Void.class);
+        assertDoesNotThrow(() -> this.restTemplate.postForEntity(requestUrl, payload, Void.class));
 
     }
 
