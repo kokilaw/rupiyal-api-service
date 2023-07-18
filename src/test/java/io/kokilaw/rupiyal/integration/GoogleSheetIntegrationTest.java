@@ -2,8 +2,8 @@ package io.kokilaw.rupiyal.integration;
 
 import io.kokilaw.rupiyal.RupiyalApiServiceApplication;
 import io.kokilaw.rupiyal.dto.BankDTO;
-import io.kokilaw.rupiyal.dto.ProcessorType;
 import io.kokilaw.rupiyal.dto.FetchTaskDTO;
+import io.kokilaw.rupiyal.dto.ProcessorType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -46,7 +45,6 @@ public class GoogleSheetIntegrationTest {
 
     @Test
     @DisplayName("Required test data is initialised when application starts")
-    @Sql({"classpath:data.sql"})
     void whenApplicationStarts_testDataIsInitialised() {
         String requestPath = "/banks";
         String requestUrl = String.format("http://localhost:%d%s", this.port, requestPath);
@@ -55,7 +53,7 @@ public class GoogleSheetIntegrationTest {
         Map<String, BankDTO> bankEntriesByBankCode = Arrays.stream(Objects.requireNonNull(response.getBody()))
                 .collect(Collectors.toMap(BankDTO::bankCode, Function.identity()));
 
-        assertEquals(5, bankEntriesByBankCode.keySet().size());
+        assertEquals(12, bankEntriesByBankCode.keySet().size());
         assertTrue(bankEntriesByBankCode.containsKey("NTB"));
         assertTrue(bankEntriesByBankCode.containsKey("COMBANK"));
         assertTrue(bankEntriesByBankCode.containsKey("HNB"));
