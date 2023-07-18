@@ -2,6 +2,7 @@ package io.kokilaw.rupiyal.client;
 
 import io.kokilaw.rupiyal.dto.CurrencyRateDTO;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -9,7 +10,9 @@ import java.util.List;
  */
 public interface CurrencyRatesAPIClient {
 
-    List<CurrencyRateDTO> getBuyingRates();
-    List<CurrencyRateDTO> getSellingRates();
+    List<CurrencyRateDTO> getLatestBuyingRates();
+    List<CurrencyRateDTO> getBuyingRates(LocalDate targetDate);
+    List<CurrencyRateDTO> getLatestSellingRates();
+    List<CurrencyRateDTO> getSellingRates(LocalDate targetDate);
 
 }

@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class CurrencyRatesAPIClientImpl implements CurrencyRatesAPIClient {
     }
 
     @Override
-    public List<CurrencyRateDTO> getBuyingRates() {
+    public List<CurrencyRateDTO> getLatestBuyingRates() {
         try {
             String apiUrl = currencyRatesApiConfig.getApiUrl().concat("?rateType=BUYING");
             ResponseEntity<BankRates[]> response = restTemplate.getForEntity(apiUrl, BankRates[].class);
@@ -47,7 +48,21 @@ public class CurrencyRatesAPIClientImpl implements CurrencyRatesAPIClient {
     }
 
     @Override
-    public List<CurrencyRateDTO> getSellingRates() {
+    public List<CurrencyRateDTO> getBuyingRates(LocalDate targetDate) {
+        try {
+            String apiUrl = currencyRatesApiConfig.getApiUrl()
+                    .concat("?rateType=BUYING&targetDate=")
+                    .concat(targetDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            ResponseEntity<BankRates[]> response = restTemplate.getForEntity(apiUrl, BankRates[].class);
+            return mapToDTO(response.getBody(), targetDate);
+        } catch (RestClientException e) {
+            e.printStackTrace();
+            throw new CurrencyRatesAPIException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<CurrencyRateDTO> getLatestSellingRates() {
         try {
             String apiUrl = currencyRatesApiConfig.getApiUrl().concat("?rateType=SELLING");
             ResponseEntity<BankRates[]> response = restTemplate.getForEntity(apiUrl, BankRates[].class);
@@ -58,7 +73,25 @@ public class CurrencyRatesAPIClientImpl implements CurrencyRatesAPIClient {
         }
     }
 
+    @Override
+    public List<CurrencyRateDTO> getSellingRates(LocalDate targetDate) {
+        try {
+            String apiUrl = currencyRatesApiConfig.getApiUrl()
+                    .concat("?rateType=SELLING&targetDate=")
+                    .concat(targetDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            ResponseEntity<BankRates[]> response = restTemplate.getForEntity(apiUrl, BankRates[].class);
+            return mapToDTO(response.getBody(), targetDate);
+        } catch (RestClientException e) {
+            e.printStackTrace();
+            throw new CurrencyRatesAPIException(e.getMessage());
+        }
+    }
+
     private List<CurrencyRateDTO> mapToDTO(BankRates[] bankRatesArray) {
+        return mapToDTO(bankRatesArray, LocalDate.now());
+    }
+
+    private List<CurrencyRateDTO> mapToDTO(BankRates[] bankRatesArray, LocalDate targetDate) {
         List<BankRates> bankRatesList = Arrays.asList(bankRatesArray);
         return bankRatesList
                 .stream()
@@ -66,7 +99,7 @@ public class CurrencyRatesAPIClientImpl implements CurrencyRatesAPIClient {
                         .stream()
                         .map(rate -> new TempRate(rate.currencyCode(), rate.rate(), bankRates.internalBankCode())))
                 .filter(tempRate -> StringUtils.isNotEmpty(tempRate.rate()) && !tempRate.rate().contains("-"))
-                .map(tempRate -> new CurrencyRateDTO(LocalDate.now(), new BigDecimal(tempRate.rate()), tempRate.currencyCode(), tempRate.bankCode()))
+                .map(tempRate -> new CurrencyRateDTO(targetDate, new BigDecimal(tempRate.rate()), tempRate.currencyCode(), tempRate.bankCode()))
                 .toList();
     }
 

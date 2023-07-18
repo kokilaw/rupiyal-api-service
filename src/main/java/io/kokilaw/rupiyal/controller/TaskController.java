@@ -1,6 +1,6 @@
 package io.kokilaw.rupiyal.controller;
 
-import io.kokilaw.rupiyal.dto.TaskDTO;
+import io.kokilaw.rupiyal.dto.FetchTaskDTO;
 import io.kokilaw.rupiyal.processor.CurrencyFetchProcessorRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,9 +25,9 @@ public class TaskController {
     }
 
     @PostMapping("/fetch")
-    public ResponseEntity<Void> executeFetchTask(@RequestBody TaskDTO taskDTO){
+    public ResponseEntity<Void> executeFetchTask(@RequestBody FetchTaskDTO taskDTO){
         currencyFetchProcessorRegistry.currencyFetchProcessor(taskDTO.processorType())
-                .execute();
+                .execute(taskDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

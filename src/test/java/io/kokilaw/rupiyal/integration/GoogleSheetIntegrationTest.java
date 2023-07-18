@@ -3,7 +3,7 @@ package io.kokilaw.rupiyal.integration;
 import io.kokilaw.rupiyal.RupiyalApiServiceApplication;
 import io.kokilaw.rupiyal.dto.BankDTO;
 import io.kokilaw.rupiyal.dto.ProcessorType;
-import io.kokilaw.rupiyal.dto.TaskDTO;
+import io.kokilaw.rupiyal.dto.FetchTaskDTO;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +14,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
@@ -68,7 +69,22 @@ public class GoogleSheetIntegrationTest {
 
         String requestPath = "/tasks/fetch";
         String requestUrl = String.format("http://localhost:%d%s", this.port, requestPath);
-        TaskDTO payload = new TaskDTO(ProcessorType.GOOGLE_SHEET_API);
+        FetchTaskDTO payload = new FetchTaskDTO(ProcessorType.GOOGLE_SHEET_API);
+        assertDoesNotThrow(() -> this.restTemplate.postForEntity(requestUrl, payload, Void.class));
+
+    }
+
+    @Test
+    @DisplayName("Currency data is fetched and saved when google sheet fetch is initiated with custom period")
+    void whenGoogleSheetFetchInitiated_withCustomPeriod_currencyDataIsFetchedAndSaved() {
+
+        String requestPath = "/tasks/fetch";
+        String requestUrl = String.format("http://localhost:%d%s", this.port, requestPath);
+        FetchTaskDTO payload = new FetchTaskDTO(
+                ProcessorType.GOOGLE_SHEET_API,
+                LocalDate.of(2023, 5, 30),
+                LocalDate.of(2023, 5, 30)
+        );
         assertDoesNotThrow(() -> this.restTemplate.postForEntity(requestUrl, payload, Void.class));
 
     }
