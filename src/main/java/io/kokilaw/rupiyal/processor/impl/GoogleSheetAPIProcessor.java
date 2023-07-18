@@ -1,6 +1,6 @@
 package io.kokilaw.rupiyal.processor.impl;
 
-import io.kokilaw.rupiyal.DateUtils;
+import io.kokilaw.rupiyal.utils.DateUtils;
 import io.kokilaw.rupiyal.client.CurrencyRatesAPIClient;
 import io.kokilaw.rupiyal.dto.CurrencyRateDTO;
 import io.kokilaw.rupiyal.dto.CurrencyRateType;

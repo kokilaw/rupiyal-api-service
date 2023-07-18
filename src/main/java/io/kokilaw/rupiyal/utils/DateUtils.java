@@ -1,4 +1,4 @@
-package io.kokilaw.rupiyal;
+package io.kokilaw.rupiyal.utils;
 
 import org.apache.commons.lang3.StringUtils;
 
