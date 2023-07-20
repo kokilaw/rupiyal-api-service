@@ -13,6 +13,7 @@ import io.kokilaw.rupiyal.service.CurrencyRateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -70,7 +71,20 @@ public class CurrencyRateServiceImpl implements CurrencyRateService {
                             .date(rateDTO.date())
                             .build())
                     .toList();
-            sellingRateRepository.saveAll(sellingRateEntities);
+            sellingRateEntities.forEach(sellingRateEntity -> sellingRateRepository.findByBankAndCurrencyCodeAndDateAndRate(
+                                    sellingRateEntity.getBank(),
+                                    sellingRateEntity.getCurrencyCode(),
+                                    sellingRateEntity.getDate(),
+                                    sellingRateEntity.getRate()
+                            )
+                            .ifPresentOrElse(
+                                    existingEntry -> {
+                                        existingEntry.setUpdatedAt(LocalDateTime.now());
+                                        sellingRateRepository.save(existingEntry);
+                                    },
+                                    () -> sellingRateRepository.save(sellingRateEntity)
+                            )
+            );
         });
     }
 
@@ -97,7 +111,15 @@ public class CurrencyRateServiceImpl implements CurrencyRateService {
                             .date(rateDTO.date())
                             .build())
                     .toList();
-            buyingRateRepository.saveAll(buyingRateEntities);
+            buyingRateEntities.forEach(buyingRateEntity -> buyingRateRepository.findByBankAndCurrencyCodeAndDateAndRate(buyingRateEntity.getBank(), buyingRateEntity.getCurrencyCode(), buyingRateEntity.getDate(), buyingRateEntity.getRate())
+                    .ifPresentOrElse(
+                            existingEntry -> {
+                                existingEntry.setUpdatedAt(LocalDateTime.now());
+                                buyingRateRepository.save(existingEntry);
+                            },
+                            () -> buyingRateRepository.save(buyingRateEntity)
+                    )
+            );
         });
     }
 
