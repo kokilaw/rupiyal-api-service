@@ -11,7 +11,6 @@ import io.kokilaw.rupiyal.service.CurrencyRateService;
 import io.kokilaw.rupiyal.utils.DateUtils;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
