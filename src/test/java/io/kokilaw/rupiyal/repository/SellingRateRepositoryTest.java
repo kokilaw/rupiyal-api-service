@@ -2,6 +2,7 @@ package io.kokilaw.rupiyal.repository;
 
 import io.kokilaw.rupiyal.repository.model.BankEntity;
 import io.kokilaw.rupiyal.repository.model.BuyingRateEntity;
+import io.kokilaw.rupiyal.repository.model.SellingRateEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,17 +16,18 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Created by kokilaw on 2023-06-13
  */
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-class BuyingRateRepositoryTest {
+class SellingRateRepositoryTest {
 
     @Autowired
-    private BuyingRateRepository buyingRateRepository;
+    private SellingRateRepository sellingRateRepository;
 
     @Autowired
     private BankRepository bankRepository;
@@ -37,15 +39,15 @@ class BuyingRateRepositoryTest {
         BankEntity bankEntity = bankRepository.findById("NTB")
                 .orElseThrow(() -> new RuntimeException("Bank not found!"));
 
-        BuyingRateEntity entryToBeSaved = BuyingRateEntity.builder()
+        SellingRateEntity entryToBeSaved = SellingRateEntity.builder()
                 .bank(bankEntity)
                 .date(LocalDate.now())
                 .currencyCode("USD")
                 .rate(new BigDecimal("294.50"))
                 .build();
 
-        BuyingRateEntity savedEntry = buyingRateRepository.saveAndFlush(entryToBeSaved);
-        BuyingRateEntity fetchedSavedEntry = buyingRateRepository.findById(savedEntry.getId())
+        SellingRateEntity savedEntry = sellingRateRepository.saveAndFlush(entryToBeSaved);
+        SellingRateEntity fetchedSavedEntry = sellingRateRepository.findById(savedEntry.getId())
                 .orElseThrow(() -> new RuntimeException("Entry not found!"));
         assertEquals(0, entryToBeSaved.getRate().compareTo(fetchedSavedEntry.getRate()));
         assertNotNull(savedEntry.getUpdatedAt());
@@ -56,14 +58,14 @@ class BuyingRateRepositoryTest {
 
     @Test
     @DisplayName("When multiple entries are available for a single day, latest entry for the day is retrieved")
-    @Sql({"/test-data/1-buying-rate-repository.sql"})
+    @Sql({"/test-data/2-selling-rate-repository.sql"})
     void whenMultipleEntriesAvailableForSingleDate_LatestEntryForTheDayIsRetrieved() {
-        List<BuyingRateEntity> allEntries = buyingRateRepository.findAll();
+        List<SellingRateEntity> allEntries = sellingRateRepository.findAll();
         assertEquals(4, allEntries.size());
-        List<BuyingRateEntity> entries = buyingRateRepository.getLastEntriesForTheDateGroupedByBankAndCurrency("2023-07-20");
+        List<SellingRateEntity> entries = sellingRateRepository.getLastEntriesForTheDateGroupedByBankAndCurrency("2023-07-20");
         assertEquals(3, entries.size());
 
-        Optional<BuyingRateEntity> usdEntry = entries.stream().filter(buyingRateEntity -> "USD".equals(buyingRateEntity.getCurrencyCode())).findAny();
+        Optional<SellingRateEntity> usdEntry = entries.stream().filter(buyingRateEntity -> "USD".equals(buyingRateEntity.getCurrencyCode())).findAny();
         assertEquals(Boolean.TRUE, usdEntry.isPresent());
         assertEquals(0, usdEntry.get().getRate().compareTo(new BigDecimal("306.5410")));
     }
