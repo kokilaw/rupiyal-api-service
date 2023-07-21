@@ -1,7 +1,6 @@
 package io.kokilaw.rupiyal.repository;
 
 import io.kokilaw.rupiyal.repository.model.BankEntity;
-import io.kokilaw.rupiyal.repository.model.BuyingRateEntity;
 import io.kokilaw.rupiyal.repository.model.SellingRateEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -67,7 +66,9 @@ class SellingRateRepositoryTest {
 
         Optional<SellingRateEntity> usdEntry = entries.stream().filter(buyingRateEntity -> "USD".equals(buyingRateEntity.getCurrencyCode())).findAny();
         assertEquals(Boolean.TRUE, usdEntry.isPresent());
-        assertEquals(0, usdEntry.get().getRate().compareTo(new BigDecimal("306.5410")));
+        usdEntry.ifPresent(sellingRateEntity -> {
+            assertEquals(0, usdEntry.get().getRate().compareTo(new BigDecimal("306.5410")));
+        });
     }
 
 }
