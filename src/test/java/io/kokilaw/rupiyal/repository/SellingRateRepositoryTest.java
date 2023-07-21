@@ -66,9 +66,7 @@ class SellingRateRepositoryTest {
 
         Optional<SellingRateEntity> usdEntry = entries.stream().filter(buyingRateEntity -> "USD".equals(buyingRateEntity.getCurrencyCode())).findAny();
         assertEquals(Boolean.TRUE, usdEntry.isPresent());
-        usdEntry.ifPresent(sellingRateEntity -> {
-            assertEquals(0, usdEntry.get().getRate().compareTo(new BigDecimal("306.5410")));
-        });
+        usdEntry.ifPresent(sellingRateEntity -> assertEquals(0, usdEntry.get().getRate().compareTo(new BigDecimal("306.5410"))));
     }
 
 }
