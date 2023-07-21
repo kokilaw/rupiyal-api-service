@@ -2,6 +2,7 @@ package io.kokilaw.rupiyal.service.impl;
 
 import io.kokilaw.rupiyal.dto.CurrencyRateDTO;
 import io.kokilaw.rupiyal.dto.CurrencyRateType;
+import io.kokilaw.rupiyal.dto.DateCurrencyRatesDTO;
 import io.kokilaw.rupiyal.exception.NotFoundException;
 import io.kokilaw.rupiyal.repository.BankRepository;
 import io.kokilaw.rupiyal.repository.BuyingRateRepository;
@@ -10,9 +11,12 @@ import io.kokilaw.rupiyal.repository.model.BankEntity;
 import io.kokilaw.rupiyal.repository.model.BuyingRateEntity;
 import io.kokilaw.rupiyal.repository.model.SellingRateEntity;
 import io.kokilaw.rupiyal.service.CurrencyRateService;
+import io.kokilaw.rupiyal.utils.DateUtils;
+import io.kokilaw.rupiyal.utils.PriceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,6 +50,50 @@ public class CurrencyRateServiceImpl implements CurrencyRateService {
         } else {
             saveSellingCurrencyRates(currencyRates);
         }
+    }
+
+    @Override
+    public DateCurrencyRatesDTO getCurrencyRatesForTheDate(LocalDate date) {
+
+        List<BuyingRateEntity> buyingRates = buyingRateRepository.getLastEntriesForTheDateGroupedByBankAndCurrency(date.toString());
+        List<SellingRateEntity> sellingRates = sellingRateRepository.getLastEntriesForTheDateGroupedByBankAndCurrency(date.toString());
+
+        Map<String, List<DateCurrencyRatesDTO.RateEntryDTO>> sellingRatesMap = new HashMap<>();
+        sellingRates
+                .stream()
+                .map(SellingRateEntity::getCurrencyCode)
+                .distinct()
+                .forEach(currencyCode -> {
+                    List<DateCurrencyRatesDTO.RateEntryDTO> entries = sellingRates.stream()
+                            .filter(sellingRateEntity -> sellingRateEntity.getCurrencyCode().equals(currencyCode))
+                            .map(sellingRateEntity -> new DateCurrencyRatesDTO.RateEntryDTO(
+                                    sellingRateEntity.getBank().getBankCode(),
+                                    PriceUtils.formatPriceInDefaultFormat(sellingRateEntity.getRate()),
+                                    DateUtils.getDateTimeWithSystemFormat(sellingRateEntity.getUpdatedAt())
+                            ))
+                            .toList();
+                    sellingRatesMap.put(currencyCode, entries);
+                });
+
+        Map<String, List<DateCurrencyRatesDTO.RateEntryDTO>> buyingRatesMap = new HashMap<>();
+        buyingRates
+                .stream()
+                .map(BuyingRateEntity::getCurrencyCode)
+                .distinct()
+                .forEach(currencyCode -> {
+                    List<DateCurrencyRatesDTO.RateEntryDTO> entries = buyingRates.stream()
+                            .filter(buyingRateEntity -> buyingRateEntity.getCurrencyCode().equals(currencyCode))
+                            .map(buyingRateEntity -> new DateCurrencyRatesDTO.RateEntryDTO(
+                                    buyingRateEntity.getBank().getBankCode(),
+                                    PriceUtils.formatPriceInDefaultFormat(buyingRateEntity.getRate()),
+                                    DateUtils.getDateTimeWithSystemFormat(buyingRateEntity.getUpdatedAt())
+                            ))
+                            .toList();
+                    buyingRatesMap.put(currencyCode, entries);
+                });
+
+
+        return new DateCurrencyRatesDTO(sellingRatesMap, buyingRatesMap);
     }
 
     private void saveSellingCurrencyRates(List<CurrencyRateDTO> currencyRates) {

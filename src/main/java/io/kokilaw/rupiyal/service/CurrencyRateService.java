@@ -2,7 +2,9 @@ package io.kokilaw.rupiyal.service;
 
 import io.kokilaw.rupiyal.dto.CurrencyRateDTO;
 import io.kokilaw.rupiyal.dto.CurrencyRateType;
+import io.kokilaw.rupiyal.dto.DateCurrencyRatesDTO;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -11,5 +13,7 @@ import java.util.List;
 public interface CurrencyRateService {
 
     void saveCurrencyRates(CurrencyRateType currencyRateType, List<CurrencyRateDTO> currencyRates);
+
+    DateCurrencyRatesDTO getCurrencyRatesForTheDate(LocalDate date);
 
 }

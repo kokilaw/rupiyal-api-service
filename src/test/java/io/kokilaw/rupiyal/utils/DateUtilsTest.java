@@ -4,6 +4,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 
@@ -52,6 +55,15 @@ class DateUtilsTest {
         List<LocalDate> datesWithinPeriod = DateUtils.getDatesWithinPeriod(LocalDate.of(2023, 7, 1), LocalDate.of(2023, 6, 30));
         List<String> dateStings = datesWithinPeriod.stream().map(LocalDate::toString).toList();
         assertEquals(Collections.emptyList(), dateStings);
+
+        System.out.println(DateUtils.getDateTimeWithSystemFormat(LocalDateTime.now()));
+    }
+
+    @Test
+    @DisplayName("Should return formatted date time string with time zone attached")
+    void givenLocalDateTimeInstance_shouldReturnFormattedStringWithTimeZone() {
+        String formattedDateTime = DateUtils.getDateTimeWithSystemFormat(LocalDateTime.of(2023, 7, 11, 11, 1, 55), ZoneId.of("+05:30"));
+        assertEquals("2023-07-11T11:01:55+05:30", formattedDateTime);
     }
 
 }

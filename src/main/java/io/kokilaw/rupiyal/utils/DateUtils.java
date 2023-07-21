@@ -3,6 +3,10 @@ package io.kokilaw.rupiyal.utils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
@@ -15,6 +19,8 @@ import static java.time.LocalDate.*;
  * Created by kokilaw on 2023-07-18
  */
 public class DateUtils {
+
+    private static final DateTimeFormatter DEFAULT_DATE_TIME_FORMAT = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
     private DateUtils() {
 
@@ -46,6 +52,15 @@ public class DateUtils {
                 .mapToObj(from::plusDays)
                 .toList();
 
+    }
+
+    public static String getDateTimeWithSystemFormat(LocalDateTime dateTime) {
+        return getDateTimeWithSystemFormat(dateTime, ZoneId.systemDefault());
+    }
+
+    public static String getDateTimeWithSystemFormat(LocalDateTime dateTime, ZoneId zoneId) {
+        ZonedDateTime dateTimeWithZone = ZonedDateTime.of(dateTime, zoneId);
+        return DEFAULT_DATE_TIME_FORMAT.format(dateTimeWithZone);
     }
 
 }
