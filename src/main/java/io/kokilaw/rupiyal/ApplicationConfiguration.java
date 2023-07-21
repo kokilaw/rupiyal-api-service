@@ -1,6 +1,6 @@
 package io.kokilaw.rupiyal;
 
-import io.kokilaw.rupiyal.config.CurrencyRatesApiConfig;
+import io.kokilaw.rupiyal.config.ExchangeRatesApiConfig;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,11 +14,11 @@ import org.springframework.web.client.RestTemplate;
 public class ApplicationConfiguration {
 
     @Bean
-    @Qualifier(value = "currencyRatesAPIHttpClient")
-    public RestTemplate currencyRatesAPIHttpClient(CurrencyRatesApiConfig currencyRatesApiConfig) {
+    @Qualifier(value = "exchangeRatesAPIHttpClient")
+    public RestTemplate exchangeRatesAPIHttpClient(ExchangeRatesApiConfig exchangeRatesApiConfig) {
         var factory = new SimpleClientHttpRequestFactory();
-        factory.setConnectTimeout(currencyRatesApiConfig.getConnectTimeOut());
-        factory.setReadTimeout(currencyRatesApiConfig.getReadTimeOut());
+        factory.setConnectTimeout(exchangeRatesApiConfig.getConnectTimeOut());
+        factory.setReadTimeout(exchangeRatesApiConfig.getReadTimeOut());
         return new RestTemplate(factory);
     }
 

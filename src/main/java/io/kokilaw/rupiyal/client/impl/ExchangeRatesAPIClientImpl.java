@@ -1,9 +1,9 @@
 package io.kokilaw.rupiyal.client.impl;
 
-import io.kokilaw.rupiyal.client.CurrencyRatesAPIClient;
-import io.kokilaw.rupiyal.config.CurrencyRatesApiConfig;
-import io.kokilaw.rupiyal.dto.CurrencyRateDTO;
-import io.kokilaw.rupiyal.exception.CurrencyRatesAPIException;
+import io.kokilaw.rupiyal.client.ExchangeRatesAPIClient;
+import io.kokilaw.rupiyal.config.ExchangeRatesApiConfig;
+import io.kokilaw.rupiyal.dto.ExchangeRateDTO;
+import io.kokilaw.rupiyal.exception.ExchangeRatesAPIException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,76 +22,76 @@ import java.util.List;
  * Created by kokilaw on 2023-07-04
  */
 @Component
-public class CurrencyRatesAPIClientImpl implements CurrencyRatesAPIClient {
+public class ExchangeRatesAPIClientImpl implements ExchangeRatesAPIClient {
 
     private final RestTemplate restTemplate;
-    private final CurrencyRatesApiConfig currencyRatesApiConfig;
+    private final ExchangeRatesApiConfig exchangeRatesApiConfig;
 
     @Autowired
-    public CurrencyRatesAPIClientImpl(
-            @Qualifier("currencyRatesAPIHttpClient") RestTemplate restTemplate,
-            CurrencyRatesApiConfig currencyRatesApiConfig) {
+    public ExchangeRatesAPIClientImpl(
+            @Qualifier("exchangeRatesAPIHttpClient") RestTemplate restTemplate,
+            ExchangeRatesApiConfig exchangeRatesApiConfig) {
         this.restTemplate = restTemplate;
-        this.currencyRatesApiConfig = currencyRatesApiConfig;
+        this.exchangeRatesApiConfig = exchangeRatesApiConfig;
     }
 
     @Override
-    public List<CurrencyRateDTO> getLatestBuyingRates() {
+    public List<ExchangeRateDTO> getLatestBuyingRates() {
         try {
-            String apiUrl = currencyRatesApiConfig.getApiUrl().concat("?rateType=BUYING");
+            String apiUrl = exchangeRatesApiConfig.getApiUrl().concat("?rateType=BUYING");
             ResponseEntity<BankRates[]> response = restTemplate.getForEntity(apiUrl, BankRates[].class);
             return mapToDTO(response.getBody());
         } catch (RestClientException e) {
             e.printStackTrace();
-            throw new CurrencyRatesAPIException(e.getMessage());
+            throw new ExchangeRatesAPIException(e.getMessage());
         }
     }
 
     @Override
-    public List<CurrencyRateDTO> getBuyingRates(LocalDate targetDate) {
+    public List<ExchangeRateDTO> getBuyingRates(LocalDate targetDate) {
         try {
-            String apiUrl = currencyRatesApiConfig.getApiUrl()
+            String apiUrl = exchangeRatesApiConfig.getApiUrl()
                     .concat("?rateType=BUYING&targetDate=")
                     .concat(targetDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
             ResponseEntity<BankRates[]> response = restTemplate.getForEntity(apiUrl, BankRates[].class);
             return mapToDTO(response.getBody(), targetDate);
         } catch (RestClientException e) {
             e.printStackTrace();
-            throw new CurrencyRatesAPIException(e.getMessage());
+            throw new ExchangeRatesAPIException(e.getMessage());
         }
     }
 
     @Override
-    public List<CurrencyRateDTO> getLatestSellingRates() {
+    public List<ExchangeRateDTO> getLatestSellingRates() {
         try {
-            String apiUrl = currencyRatesApiConfig.getApiUrl().concat("?rateType=SELLING");
+            String apiUrl = exchangeRatesApiConfig.getApiUrl().concat("?rateType=SELLING");
             ResponseEntity<BankRates[]> response = restTemplate.getForEntity(apiUrl, BankRates[].class);
             return mapToDTO(response.getBody());
         } catch (RestClientException e) {
             e.printStackTrace();
-            throw new CurrencyRatesAPIException(e.getMessage());
+            throw new ExchangeRatesAPIException(e.getMessage());
         }
     }
 
     @Override
-    public List<CurrencyRateDTO> getSellingRates(LocalDate targetDate) {
+    public List<ExchangeRateDTO> getSellingRates(LocalDate targetDate) {
         try {
-            String apiUrl = currencyRatesApiConfig.getApiUrl()
+            String apiUrl = exchangeRatesApiConfig.getApiUrl()
                     .concat("?rateType=SELLING&targetDate=")
                     .concat(targetDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
             ResponseEntity<BankRates[]> response = restTemplate.getForEntity(apiUrl, BankRates[].class);
             return mapToDTO(response.getBody(), targetDate);
         } catch (RestClientException e) {
             e.printStackTrace();
-            throw new CurrencyRatesAPIException(e.getMessage());
+            throw new ExchangeRatesAPIException(e.getMessage());
         }
     }
 
-    private List<CurrencyRateDTO> mapToDTO(BankRates[] bankRatesArray) {
+    private List<ExchangeRateDTO> mapToDTO(BankRates[] bankRatesArray) {
         return mapToDTO(bankRatesArray, LocalDate.now());
     }
 
-    private List<CurrencyRateDTO> mapToDTO(BankRates[] bankRatesArray, LocalDate targetDate) {
+    private List<ExchangeRateDTO> mapToDTO(BankRates[] bankRatesArray, LocalDate targetDate) {
         List<BankRates> bankRatesList = Arrays.asList(bankRatesArray);
         return bankRatesList
                 .stream()
@@ -99,7 +99,7 @@ public class CurrencyRatesAPIClientImpl implements CurrencyRatesAPIClient {
                         .stream()
                         .map(rate -> new TempRate(rate.currencyCode(), rate.rate(), bankRates.internalBankCode())))
                 .filter(tempRate -> StringUtils.isNotEmpty(tempRate.rate()) && !tempRate.rate().contains("-"))
-                .map(tempRate -> new CurrencyRateDTO(targetDate, new BigDecimal(tempRate.rate()), tempRate.currencyCode(), tempRate.bankCode()))
+                .map(tempRate -> new ExchangeRateDTO(targetDate, new BigDecimal(tempRate.rate()), tempRate.currencyCode(), tempRate.bankCode()))
                 .toList();
     }
 

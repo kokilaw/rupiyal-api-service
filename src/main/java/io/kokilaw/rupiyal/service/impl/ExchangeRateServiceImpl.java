@@ -1,8 +1,8 @@
 package io.kokilaw.rupiyal.service.impl;
 
-import io.kokilaw.rupiyal.dto.CurrencyRateDTO;
-import io.kokilaw.rupiyal.dto.CurrencyRateType;
-import io.kokilaw.rupiyal.dto.DateCurrencyRatesDTO;
+import io.kokilaw.rupiyal.dto.ExchangeRateDTO;
+import io.kokilaw.rupiyal.dto.ExchangeRateType;
+import io.kokilaw.rupiyal.dto.DateExchangeRatesSummaryDTO;
 import io.kokilaw.rupiyal.exception.NotFoundException;
 import io.kokilaw.rupiyal.repository.BankRepository;
 import io.kokilaw.rupiyal.repository.BuyingRateRepository;
@@ -10,7 +10,7 @@ import io.kokilaw.rupiyal.repository.SellingRateRepository;
 import io.kokilaw.rupiyal.repository.model.BankEntity;
 import io.kokilaw.rupiyal.repository.model.BuyingRateEntity;
 import io.kokilaw.rupiyal.repository.model.SellingRateEntity;
-import io.kokilaw.rupiyal.service.CurrencyRateService;
+import io.kokilaw.rupiyal.service.ExchangeRateService;
 import io.kokilaw.rupiyal.utils.DateUtils;
 import io.kokilaw.rupiyal.utils.PriceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +27,14 @@ import java.util.Map;
  * Created by kokilaw on 2023-06-13
  */
 @Service
-public class CurrencyRateServiceImpl implements CurrencyRateService {
+public class ExchangeRateServiceImpl implements ExchangeRateService {
 
     private final BankRepository bankRepository;
     private final BuyingRateRepository buyingRateRepository;
     private final SellingRateRepository sellingRateRepository;
 
     @Autowired
-    public CurrencyRateServiceImpl(
+    public ExchangeRateServiceImpl(
             BankRepository bankRepository,
             BuyingRateRepository buyingRateRepository,
             SellingRateRepository sellingRateRepository) {
@@ -44,8 +44,8 @@ public class CurrencyRateServiceImpl implements CurrencyRateService {
     }
 
     @Override
-    public void saveCurrencyRates(CurrencyRateType currencyRateType, List<CurrencyRateDTO> currencyRates) {
-        if (CurrencyRateType.BUYING == currencyRateType) {
+    public void saveCurrencyRates(ExchangeRateType exchangeRateType, List<ExchangeRateDTO> currencyRates) {
+        if (ExchangeRateType.BUYING == exchangeRateType) {
             saveBuyingCurrencyRates(currencyRates);
         } else {
             saveSellingCurrencyRates(currencyRates);
@@ -53,20 +53,20 @@ public class CurrencyRateServiceImpl implements CurrencyRateService {
     }
 
     @Override
-    public DateCurrencyRatesDTO getCurrencyRatesForTheDate(LocalDate date) {
+    public DateExchangeRatesSummaryDTO getCurrencyRatesForTheDate(LocalDate date) {
 
         List<BuyingRateEntity> buyingRates = buyingRateRepository.getLastEntriesForTheDateGroupedByBankAndCurrency(date.toString());
         List<SellingRateEntity> sellingRates = sellingRateRepository.getLastEntriesForTheDateGroupedByBankAndCurrency(date.toString());
 
-        Map<String, List<DateCurrencyRatesDTO.RateEntryDTO>> sellingRatesMap = new HashMap<>();
+        Map<String, List<DateExchangeRatesSummaryDTO.RateEntryDTO>> sellingRatesMap = new HashMap<>();
         sellingRates
                 .stream()
                 .map(SellingRateEntity::getCurrencyCode)
                 .distinct()
                 .forEach(currencyCode -> {
-                    List<DateCurrencyRatesDTO.RateEntryDTO> entries = sellingRates.stream()
+                    List<DateExchangeRatesSummaryDTO.RateEntryDTO> entries = sellingRates.stream()
                             .filter(sellingRateEntity -> sellingRateEntity.getCurrencyCode().equals(currencyCode))
-                            .map(sellingRateEntity -> new DateCurrencyRatesDTO.RateEntryDTO(
+                            .map(sellingRateEntity -> new DateExchangeRatesSummaryDTO.RateEntryDTO(
                                     sellingRateEntity.getBank().getBankCode(),
                                     PriceUtils.formatPriceInDefaultFormat(sellingRateEntity.getRate()),
                                     DateUtils.getDateTimeWithSystemFormat(sellingRateEntity.getUpdatedAt())
@@ -75,15 +75,15 @@ public class CurrencyRateServiceImpl implements CurrencyRateService {
                     sellingRatesMap.put(currencyCode, entries);
                 });
 
-        Map<String, List<DateCurrencyRatesDTO.RateEntryDTO>> buyingRatesMap = new HashMap<>();
+        Map<String, List<DateExchangeRatesSummaryDTO.RateEntryDTO>> buyingRatesMap = new HashMap<>();
         buyingRates
                 .stream()
                 .map(BuyingRateEntity::getCurrencyCode)
                 .distinct()
                 .forEach(currencyCode -> {
-                    List<DateCurrencyRatesDTO.RateEntryDTO> entries = buyingRates.stream()
+                    List<DateExchangeRatesSummaryDTO.RateEntryDTO> entries = buyingRates.stream()
                             .filter(buyingRateEntity -> buyingRateEntity.getCurrencyCode().equals(currencyCode))
-                            .map(buyingRateEntity -> new DateCurrencyRatesDTO.RateEntryDTO(
+                            .map(buyingRateEntity -> new DateExchangeRatesSummaryDTO.RateEntryDTO(
                                     buyingRateEntity.getBank().getBankCode(),
                                     PriceUtils.formatPriceInDefaultFormat(buyingRateEntity.getRate()),
                                     DateUtils.getDateTimeWithSystemFormat(buyingRateEntity.getUpdatedAt())
@@ -93,11 +93,11 @@ public class CurrencyRateServiceImpl implements CurrencyRateService {
                 });
 
 
-        return new DateCurrencyRatesDTO(sellingRatesMap, buyingRatesMap);
+        return new DateExchangeRatesSummaryDTO(sellingRatesMap, buyingRatesMap);
     }
 
-    private void saveSellingCurrencyRates(List<CurrencyRateDTO> currencyRates) {
-        Map<String, List<CurrencyRateDTO>> ratesByBankCode = getRatesByBankCode(currencyRates);
+    private void saveSellingCurrencyRates(List<ExchangeRateDTO> currencyRates) {
+        Map<String, List<ExchangeRateDTO>> ratesByBankCode = getRatesByBankCode(currencyRates);
 
         Map<String, BankEntity> bankEntityCache = new HashMap<>();
         ratesByBankCode.forEach((bankCode, rates) -> {
@@ -136,8 +136,8 @@ public class CurrencyRateServiceImpl implements CurrencyRateService {
         });
     }
 
-    private void saveBuyingCurrencyRates(List<CurrencyRateDTO> currencyRates) {
-        Map<String, List<CurrencyRateDTO>> ratesByBankCode = getRatesByBankCode(currencyRates);
+    private void saveBuyingCurrencyRates(List<ExchangeRateDTO> currencyRates) {
+        Map<String, List<ExchangeRateDTO>> ratesByBankCode = getRatesByBankCode(currencyRates);
 
         Map<String, BankEntity> bankEntityCache = new HashMap<>();
         ratesByBankCode.forEach((bankCode, rates) -> {
@@ -171,11 +171,11 @@ public class CurrencyRateServiceImpl implements CurrencyRateService {
         });
     }
 
-    private Map<String, List<CurrencyRateDTO>> getRatesByBankCode(List<CurrencyRateDTO> currencyRates) {
-        Map<String, List<CurrencyRateDTO>> ratesByBankCode = new HashMap<>();
+    private Map<String, List<ExchangeRateDTO>> getRatesByBankCode(List<ExchangeRateDTO> currencyRates) {
+        Map<String, List<ExchangeRateDTO>> ratesByBankCode = new HashMap<>();
         currencyRates.forEach(currencyRateDTO -> {
             String bankCode = currencyRateDTO.bankCode();
-            List<CurrencyRateDTO> ratesForBank;
+            List<ExchangeRateDTO> ratesForBank;
             if (ratesByBankCode.containsKey(bankCode)) {
                 ratesForBank = ratesByBankCode.get(bankCode);
             } else {

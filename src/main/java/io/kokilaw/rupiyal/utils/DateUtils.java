@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static java.time.LocalDate.*;
+import static java.time.LocalDate.parse;
 
 /**
  * Created by kokilaw on 2023-07-18

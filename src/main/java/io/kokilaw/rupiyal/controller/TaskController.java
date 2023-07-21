@@ -1,7 +1,7 @@
 package io.kokilaw.rupiyal.controller;
 
 import io.kokilaw.rupiyal.dto.FetchTaskDTO;
-import io.kokilaw.rupiyal.processor.CurrencyFetchProcessorRegistry;
+import io.kokilaw.rupiyal.processor.ExchangeRatesFetchProcessorRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,16 +17,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("tasks")
 public class TaskController {
 
-    private final CurrencyFetchProcessorRegistry currencyFetchProcessorRegistry;
+    private final ExchangeRatesFetchProcessorRegistry exchangeRatesFetchProcessorRegistry;
 
     @Autowired
-    public TaskController(CurrencyFetchProcessorRegistry currencyFetchProcessorRegistry) {
-        this.currencyFetchProcessorRegistry = currencyFetchProcessorRegistry;
+    public TaskController(ExchangeRatesFetchProcessorRegistry exchangeRatesFetchProcessorRegistry) {
+        this.exchangeRatesFetchProcessorRegistry = exchangeRatesFetchProcessorRegistry;
     }
 
     @PostMapping("/fetch")
     public ResponseEntity<Void> executeFetchTask(@RequestBody FetchTaskDTO taskDTO){
-        currencyFetchProcessorRegistry.currencyFetchProcessor(taskDTO.processorType())
+        exchangeRatesFetchProcessorRegistry.currencyFetchProcessor(taskDTO.processorType())
                 .execute(taskDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

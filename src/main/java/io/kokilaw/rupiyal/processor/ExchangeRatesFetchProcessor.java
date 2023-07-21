@@ -6,7 +6,7 @@ import io.kokilaw.rupiyal.dto.ProcessorType;
 /**
  * Created by kokilaw on 2023-06-13
  */
-public interface CurrencyFetchProcessor {
+public interface ExchangeRatesFetchProcessor {
     ProcessorType getType();
     void execute(FetchTaskDTO taskDTO);
 }
