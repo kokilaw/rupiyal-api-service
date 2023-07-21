@@ -60,7 +60,7 @@ class BuyingRateRepositoryTest {
     void whenMultipleEntriesAvailableForSingleDate_LatestEntryForTheDayIsRetrieved() {
         List<BuyingRateEntity> allEntries = buyingRateRepository.findAll();
         assertEquals(4, allEntries.size());
-        List<BuyingRateEntity> entries = buyingRateRepository.getLastEntriesForTheDateGroupedByBankAndCurrency("2023-07-20");
+        List<BuyingRateEntity> entries = buyingRateRepository.getLastEntriesForTheDateGroupedByBankAndCurrency(LocalDate.parse("2023-07-20"));
         assertEquals(3, entries.size());
 
         Optional<BuyingRateEntity> usdEntry = entries.stream().filter(buyingRateEntity -> "USD".equals(buyingRateEntity.getCurrencyCode())).findAny();

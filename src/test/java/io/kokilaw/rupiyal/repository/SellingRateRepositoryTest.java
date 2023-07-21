@@ -61,7 +61,7 @@ class SellingRateRepositoryTest {
     void whenMultipleEntriesAvailableForSingleDate_LatestEntryForTheDayIsRetrieved() {
         List<SellingRateEntity> allEntries = sellingRateRepository.findAll();
         assertEquals(4, allEntries.size());
-        List<SellingRateEntity> entries = sellingRateRepository.getLastEntriesForTheDateGroupedByBankAndCurrency("2023-07-20");
+        List<SellingRateEntity> entries = sellingRateRepository.getLastEntriesForTheDateGroupedByBankAndCurrency(LocalDate.parse("2023-07-20"));
         assertEquals(3, entries.size());
 
         Optional<SellingRateEntity> usdEntry = entries.stream().filter(buyingRateEntity -> "USD".equals(buyingRateEntity.getCurrencyCode())).findAny();

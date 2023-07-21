@@ -20,6 +20,6 @@ public interface SellingRateRepository extends JpaRepository<SellingRateEntity, 
     Optional<SellingRateEntity> findByBankAndCurrencyCodeAndDateAndRate(BankEntity bank, String currencyCode, LocalDate date, BigDecimal rate);
 
     @Query(value = "SELECT DISTINCT ON (bank_code, currency_code, date) * FROM selling_rate WHERE date = ?1 ORDER BY bank_code, currency_code, date, created_at DESC", nativeQuery = true)
-    List<SellingRateEntity> getLastEntriesForTheDateGroupedByBankAndCurrency(String date);
+    List<SellingRateEntity> getLastEntriesForTheDateGroupedByBankAndCurrency(LocalDate date);
 
 }

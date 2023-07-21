@@ -13,20 +13,19 @@ import io.kokilaw.rupiyal.repository.model.SellingRateEntity;
 import io.kokilaw.rupiyal.service.ExchangeRateService;
 import io.kokilaw.rupiyal.utils.DateUtils;
 import io.kokilaw.rupiyal.utils.PriceUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by kokilaw on 2023-06-13
  */
 @Service
+@Slf4j
 public class ExchangeRateServiceImpl implements ExchangeRateService {
 
     private final BankRepository bankRepository;
@@ -55,10 +54,11 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
     @Override
     public DateExchangeRatesSummaryDTO getCurrencyRatesForTheDate(LocalDate date) {
 
-        List<BuyingRateEntity> buyingRates = buyingRateRepository.getLastEntriesForTheDateGroupedByBankAndCurrency(date.toString());
-        List<SellingRateEntity> sellingRates = sellingRateRepository.getLastEntriesForTheDateGroupedByBankAndCurrency(date.toString());
+        log.info("[START] Generating exchange rates for date[{}]", date);
+        List<BuyingRateEntity> buyingRates = buyingRateRepository.getLastEntriesForTheDateGroupedByBankAndCurrency(date);
+        List<SellingRateEntity> sellingRates = sellingRateRepository.getLastEntriesForTheDateGroupedByBankAndCurrency(date);
 
-        Map<String, List<DateExchangeRatesSummaryDTO.RateEntryDTO>> sellingRatesMap = new HashMap<>();
+        Map<String, List<DateExchangeRatesSummaryDTO.RateEntryDTO>> sellingRatesMap = new TreeMap<>();
         sellingRates
                 .stream()
                 .map(SellingRateEntity::getCurrencyCode)
@@ -71,11 +71,12 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
                                     PriceUtils.formatPriceInDefaultFormat(sellingRateEntity.getRate()),
                                     DateUtils.getDateTimeWithSystemFormat(sellingRateEntity.getUpdatedAt())
                             ))
+                            .sorted(Comparator.comparing(DateExchangeRatesSummaryDTO.RateEntryDTO::rate))
                             .toList();
                     sellingRatesMap.put(currencyCode, entries);
                 });
 
-        Map<String, List<DateExchangeRatesSummaryDTO.RateEntryDTO>> buyingRatesMap = new HashMap<>();
+        Map<String, List<DateExchangeRatesSummaryDTO.RateEntryDTO>> buyingRatesMap = new TreeMap<>();
         buyingRates
                 .stream()
                 .map(BuyingRateEntity::getCurrencyCode)
@@ -88,11 +89,12 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
                                     PriceUtils.formatPriceInDefaultFormat(buyingRateEntity.getRate()),
                                     DateUtils.getDateTimeWithSystemFormat(buyingRateEntity.getUpdatedAt())
                             ))
+                            .sorted(Comparator.comparing(DateExchangeRatesSummaryDTO.RateEntryDTO::rate))
                             .toList();
                     buyingRatesMap.put(currencyCode, entries);
                 });
 
-
+        log.info("[END] Generating exchange rates for date[{}] sellingRatesMap[{}] buyingRatesMap[{}]", date, sellingRatesMap.size(), buyingRatesMap.size());
         return new DateExchangeRatesSummaryDTO(sellingRatesMap, buyingRatesMap);
     }
 
