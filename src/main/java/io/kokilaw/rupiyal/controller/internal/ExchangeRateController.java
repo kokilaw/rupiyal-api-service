@@ -1,4 +1,4 @@
-package io.kokilaw.rupiyal.controller;
+package io.kokilaw.rupiyal.controller.internal;
 
 import io.kokilaw.rupiyal.dto.DateExchangeRatesSummaryDTO;
 import io.kokilaw.rupiyal.service.ExchangeRateService;
@@ -19,7 +19,7 @@ import java.time.ZoneId;
  * Created by kokilaw on 2023-07-21
  */
 @RestController
-@RequestMapping("exchange-rates")
+@RequestMapping("internal/exchange-rates")
 @Slf4j
 public class ExchangeRateController {
 
@@ -30,7 +30,7 @@ public class ExchangeRateController {
         this.exchangeRateService = exchangeRateService;
     }
 
-    @GetMapping
+    @GetMapping("summary")
     public ResponseEntity<DateExchangeRatesSummaryDTO> getSummaryForDate(@RequestParam(value = "targetDate", required = false) String date) {
         log.info("Request received to get exchange rates for date[{}]", date);
         LocalDate targetDate = StringUtils.isBlank(date)

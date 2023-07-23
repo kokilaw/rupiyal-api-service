@@ -1,4 +1,4 @@
-package io.kokilaw.rupiyal.controller;
+package io.kokilaw.rupiyal.controller.internal;
 
 import io.kokilaw.rupiyal.dto.BankDTO;
 import io.kokilaw.rupiyal.service.BankService;
@@ -16,7 +16,7 @@ import java.util.List;
  * Created by kokilaw on 2023-07-04
  */
 @RestController
-@RequestMapping("banks")
+@RequestMapping("internal/banks")
 public class BankController {
 
     private final BankService bankService;
