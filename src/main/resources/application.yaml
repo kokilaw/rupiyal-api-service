@@ -22,5 +22,5 @@ spring:
 
 exchange-rates-api:
   api-url: https://script.google.com/macros/s/AKfycbzuAOesxVUTL9xrVpAQVq5txvYWuHl2bLrtrI3cG95oPO2y0svIRl8krXznvdL7zy_2Ug/exec
-  read-timeout: 10000
-  connect-timeout: 10000
+  read-timeout: 30000
+  connect-timeout: 30000
