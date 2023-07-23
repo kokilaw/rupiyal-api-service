@@ -18,6 +18,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
+import static io.kokilaw.rupiyal.Constants.ASIA_COLOMBO_ZONE_ID;
+
 /**
  * Created by kokilaw on 2023-07-04
  */
@@ -88,7 +90,7 @@ public class ExchangeRatesAPIClientImpl implements ExchangeRatesAPIClient {
     }
 
     private List<ExchangeRateDTO> mapToDTO(BankRates[] bankRatesArray) {
-        return mapToDTO(bankRatesArray, LocalDate.now());
+        return mapToDTO(bankRatesArray, LocalDate.now(ASIA_COLOMBO_ZONE_ID));
     }
 
     private List<ExchangeRateDTO> mapToDTO(BankRates[] bankRatesArray, LocalDate targetDate) {
