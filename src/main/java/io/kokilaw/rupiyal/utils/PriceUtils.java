@@ -9,7 +9,7 @@ import java.math.RoundingMode;
 public class PriceUtils {
 
     private PriceUtils() {
-
+        throw new IllegalStateException("Utility class");
     }
 
     public static String formatPriceInDefaultFormat(BigDecimal price) {

@@ -23,7 +23,7 @@ public class DateUtils {
     private static final DateTimeFormatter DEFAULT_DATE_TIME_FORMAT = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
     private DateUtils() {
-
+        throw new IllegalStateException("Utility class");
     }
 
     public static boolean isValidDate(String dateString) {
