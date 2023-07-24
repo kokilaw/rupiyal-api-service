@@ -5,6 +5,8 @@ import io.kokilaw.rupiyal.repository.model.BankEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -19,11 +21,14 @@ class BankMapperTest {
                 .bankCode("NTB")
                 .longName("Nations Trust Bank")
                 .shortName("NTB")
+                .logo(Map.of("defaultUrl", "IMAGE_URL"))
                 .build();
         BankDTO bankDTO = BankMapper.INSTANCE.convert(bankEntity);
         assertEquals(bankDTO.bankCode(), bankEntity.getBankCode());
         assertEquals(bankDTO.shortName(), bankEntity.getShortName());
         assertEquals(bankDTO.longName(), bankEntity.getLongName());
+        assertTrue(bankDTO.logo().containsKey("imageUrl"));
+        assertEquals("IMAGE_URL", bankDTO.logo().get("imageUrl"));
     }
 
 }

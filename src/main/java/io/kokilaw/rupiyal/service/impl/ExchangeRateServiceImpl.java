@@ -1,9 +1,11 @@
 package io.kokilaw.rupiyal.service.impl;
 
+import io.kokilaw.rupiyal.dto.BankDTO;
 import io.kokilaw.rupiyal.dto.ExchangeRateDTO;
 import io.kokilaw.rupiyal.dto.ExchangeRateType;
 import io.kokilaw.rupiyal.dto.DateExchangeRatesSummaryDTO;
 import io.kokilaw.rupiyal.exception.NotFoundException;
+import io.kokilaw.rupiyal.mapper.BankMapper;
 import io.kokilaw.rupiyal.repository.BankRepository;
 import io.kokilaw.rupiyal.repository.BuyingRateRepository;
 import io.kokilaw.rupiyal.repository.SellingRateRepository;
@@ -31,15 +33,18 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
     private final BankRepository bankRepository;
     private final BuyingRateRepository buyingRateRepository;
     private final SellingRateRepository sellingRateRepository;
+    private final BankMapper bankMapper;
 
     @Autowired
     public ExchangeRateServiceImpl(
             BankRepository bankRepository,
             BuyingRateRepository buyingRateRepository,
-            SellingRateRepository sellingRateRepository) {
+            SellingRateRepository sellingRateRepository,
+            BankMapper bankMapper) {
         this.bankRepository = bankRepository;
         this.buyingRateRepository = buyingRateRepository;
         this.sellingRateRepository = sellingRateRepository;
+        this.bankMapper = bankMapper;
     }
 
     @Override
@@ -94,8 +99,10 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
                     buyingRatesMap.put(currencyCode, entries);
                 });
 
-        log.info("[END] Generating exchange rates for date[{}] sellingRatesMap[{}] buyingRatesMap[{}]", date, sellingRatesMap.size(), buyingRatesMap.size());
-        return new DateExchangeRatesSummaryDTO(sellingRatesMap, buyingRatesMap);
+        List<BankDTO> bankList = bankRepository.findAll().stream().map(bankMapper::convert).toList();
+
+        log.info("[END] Generating exchange rates for date[{}] sellingRatesMap[{}] buyingRatesMap[{}] bankList[{}]", date, sellingRatesMap.size(), buyingRatesMap.size(), bankList.size());
+        return new DateExchangeRatesSummaryDTO(sellingRatesMap, buyingRatesMap, bankList);
     }
 
     private void saveSellingCurrencyRates(List<ExchangeRateDTO> currencyRates) {
