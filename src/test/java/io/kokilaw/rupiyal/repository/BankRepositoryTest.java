@@ -26,6 +26,9 @@ class BankRepositoryTest {
     void testWhetherInitialDataExists() {
         Optional<BankEntity> bankEntityOptional = bankRepository.findById("NTB");
         Assertions.assertTrue(bankEntityOptional.isPresent());
+        bankEntityOptional.ifPresent(bank -> {
+            Assertions.assertTrue(bank.getLogo().containsKey("defaultUrl"));
+        });
     }
 
 }

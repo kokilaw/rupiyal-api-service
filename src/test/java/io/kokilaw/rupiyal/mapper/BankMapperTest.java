@@ -27,8 +27,8 @@ class BankMapperTest {
         assertEquals(bankDTO.bankCode(), bankEntity.getBankCode());
         assertEquals(bankDTO.shortName(), bankEntity.getShortName());
         assertEquals(bankDTO.longName(), bankEntity.getLongName());
-        assertTrue(bankDTO.logo().containsKey("imageUrl"));
-        assertEquals("IMAGE_URL", bankDTO.logo().get("imageUrl"));
+        assertTrue(bankDTO.logo().containsKey("defaultUrl"));
+        assertEquals("IMAGE_URL", bankDTO.logo().get("defaultUrl"));
     }
 
 }

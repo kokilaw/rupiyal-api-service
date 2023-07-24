@@ -46,7 +46,7 @@ public class GoogleSheetIntegrationTest {
     @Test
     @DisplayName("Required test data is initialised when application starts")
     void whenApplicationStarts_testDataIsInitialised() {
-        String requestPath = "/banks";
+        String requestPath = "/internal/banks";
         String requestUrl = String.format("http://localhost:%d%s", this.port, requestPath);
         ResponseEntity<BankDTO[]> response = this.restTemplate.getForEntity(requestUrl, BankDTO[].class);
 
@@ -65,7 +65,7 @@ public class GoogleSheetIntegrationTest {
     @DisplayName("Currency data is fetched and saved when google sheet fetch is initiated")
     void whenGoogleSheetFetchInitiated_currencyDataIsFetchedAndSaved() {
 
-        String requestPath = "/tasks/fetch";
+        String requestPath = "/internal/tasks/fetch";
         String requestUrl = String.format("http://localhost:%d%s", this.port, requestPath);
         FetchTaskDTO payload = new FetchTaskDTO(ProcessorType.GOOGLE_SHEET_API);
         assertDoesNotThrow(() -> this.restTemplate.postForEntity(requestUrl, payload, Void.class));
@@ -76,7 +76,7 @@ public class GoogleSheetIntegrationTest {
     @DisplayName("Currency data is fetched and saved when google sheet fetch is initiated with custom period")
     void whenGoogleSheetFetchInitiated_withCustomPeriod_currencyDataIsFetchedAndSaved() {
 
-        String requestPath = "/tasks/fetch";
+        String requestPath = "/internal/tasks/fetch";
         String requestUrl = String.format("http://localhost:%d%s", this.port, requestPath);
         FetchTaskDTO payload = new FetchTaskDTO(
                 ProcessorType.GOOGLE_SHEET_API,
