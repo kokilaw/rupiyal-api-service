@@ -2,7 +2,6 @@ package io.kokilaw.rupiyal.repository;
 
 import io.kokilaw.rupiyal.repository.model.BankEntity;
 import io.kokilaw.rupiyal.repository.model.SellingRateEntity;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

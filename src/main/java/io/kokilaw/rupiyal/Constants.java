@@ -13,6 +13,5 @@ public class Constants {
 
 
     public static final ZoneId ASIA_COLOMBO_ZONE_ID = ZoneId.of("+05:30");
-    public static final ZoneId SYSTEM_DEFAULT_ZONE_ID = ZoneId.systemDefault();
 
 }
