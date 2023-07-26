@@ -1,7 +1,7 @@
 package io.kokilaw.rupiyal.repository;
 
 import io.kokilaw.rupiyal.repository.model.BankEntity;
-import io.kokilaw.rupiyal.repository.model.BuyingRateEntity;
+import io.kokilaw.rupiyal.repository.model.SellingRateEntity;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,31 +24,31 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-class BuyingRateRepositoryTest {
+class SellingRateRepositoryTest {
 
     @Autowired
-    private BuyingRateRepository buyingRateRepository;
+    private SellingRateRepository sellingRateRepository;
 
     @Autowired
     private BankRepository bankRepository;
 
     @Test
-    @Disabled("Disabled because @CreateTimestamp and @UpdateTimestamp was removed from BuyingRateEntity")
+    @Disabled("Disabled because @CreateTimestamp and @UpdateTimestamp was removed from SellingRateEntity")
     @DisplayName("When new entry is saved, database and relevant attributes get updated")
     void whenEntryIsSaved_DatabaseGetsUpdated() {
 
         BankEntity bankEntity = bankRepository.findById("NTB")
                 .orElseThrow(() -> new RuntimeException("Bank not found!"));
 
-        BuyingRateEntity entryToBeSaved = BuyingRateEntity.builder()
+        SellingRateEntity entryToBeSaved = SellingRateEntity.builder()
                 .bankCode(bankEntity.getBankCode())
                 .date(LocalDate.now())
                 .currencyCode("USD")
                 .rate(new BigDecimal("294.50"))
                 .build();
 
-        BuyingRateEntity savedEntry = buyingRateRepository.saveAndFlush(entryToBeSaved);
-        BuyingRateEntity fetchedSavedEntry = buyingRateRepository.findById(savedEntry.getId())
+        SellingRateEntity savedEntry = sellingRateRepository.saveAndFlush(entryToBeSaved);
+        SellingRateEntity fetchedSavedEntry = sellingRateRepository.findById(savedEntry.getId())
                 .orElseThrow(() -> new RuntimeException("Entry not found!"));
         assertEquals(0, entryToBeSaved.getRate().compareTo(fetchedSavedEntry.getRate()));
         assertNotNull(savedEntry.getUpdatedAt());
@@ -59,30 +59,30 @@ class BuyingRateRepositoryTest {
 
     @Test
     @DisplayName("When multiple entries are available for a single day, latest entry for the day is retrieved")
-    @Sql({"/test-data/buying-rate-repository-test-data-1.sql"})
+    @Sql({"/test-data/selling-rate-repository-test-data-1.sql"})
     void whenMultipleEntriesAvailableForSingleDate_LatestEntryForTheDayIsRetrieved() {
-        List<BuyingRateEntity> allEntries = buyingRateRepository.findAll();
+        List<SellingRateEntity> allEntries = sellingRateRepository.findAll();
         assertEquals(4, allEntries.size());
-        List<BuyingRateEntity> entries = buyingRateRepository.getLastEntriesForTheDateGroupedByBankAndCurrency(LocalDate.parse("2023-07-20"));
+        List<SellingRateEntity> entries = sellingRateRepository.getLastEntriesForTheDateGroupedByBankAndCurrency(LocalDate.parse("2023-07-20"));
         assertEquals(3, entries.size());
 
-        Optional<BuyingRateEntity> usdEntry = entries.stream().filter(buyingRateEntity -> "USD".equals(buyingRateEntity.getCurrencyCode())).findAny();
+        Optional<SellingRateEntity> usdEntry = entries.stream().filter(buyingRateEntity -> "USD".equals(buyingRateEntity.getCurrencyCode())).findAny();
         assertEquals(Boolean.TRUE, usdEntry.isPresent());
-        usdEntry.ifPresent(buyingRateEntity -> assertEquals(0, usdEntry.get().getRate().compareTo(new BigDecimal("306.5410"))));
+        usdEntry.ifPresent(sellingRateEntity -> assertEquals("306.5410", usdEntry.get().getRate().toPlainString()));
     }
 
     @Test
     @DisplayName("Given multiple rates over multiple period, latest rates are fetched when queried")
-    @Sql({"/test-data/buying-rate-repository-test-data-2.sql"})
+    @Sql({"/test-data/selling-rate-repository-test-data-2.sql"})
     void givenMultipleRatesOverMultipleData_whenLatestRatesAreQueried_latestRatesAreFetched() {
-        List<BuyingRateEntity> allEntries = buyingRateRepository.findAll();
+        List<SellingRateEntity> allEntries = sellingRateRepository.findAll();
         assertEquals(8, allEntries.size());
-        List<BuyingRateEntity> entries = buyingRateRepository.getLatestEntriesGroupedByBankCodeAndCurrencyCode();
+        List<SellingRateEntity> entries = sellingRateRepository.getLatestEntriesGroupedByBankCodeAndCurrencyCode();
         assertEquals(3, entries.size());
 
-        Optional<BuyingRateEntity> usdEntry = entries.stream().filter(buyingRateEntity -> "USD".equals(buyingRateEntity.getCurrencyCode())).findAny();
+        Optional<SellingRateEntity> usdEntry = entries.stream().filter(buyingRateEntity -> "USD".equals(buyingRateEntity.getCurrencyCode())).findAny();
         assertEquals(Boolean.TRUE, usdEntry.isPresent());
-        usdEntry.ifPresent(buyingRateEntity -> assertEquals("304.5410", usdEntry.get().getRate().toPlainString()));
+        usdEntry.ifPresent(sellingRateEntity -> assertEquals("308.5410", usdEntry.get().getRate().toPlainString()));
     }
 
 }

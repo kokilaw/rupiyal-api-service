@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by kokilaw on 2023-07-04
@@ -29,7 +28,7 @@ public class BankServiceImpl implements BankService {
     @Override
     public List<BankDTO> getBanks() {
         List<BankEntity> bankEntities = bankRepository.findAll();
-        return bankEntities.stream().map(bankMapper::convert).collect(Collectors.toList());
+        return bankEntities.stream().map(bankMapper::convert).toList();
     }
 
     @Override

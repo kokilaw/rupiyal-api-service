@@ -1,10 +1,18 @@
 package io.kokilaw.rupiyal.repository.model;
 
-import jakarta.persistence.*;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by kokilaw on 2023-06-13
@@ -26,5 +34,9 @@ public class BankEntity {
 
     @Column(name="long_name")
     private String longName;
+
+    @Column(name="logo")
+    @Type(JsonType.class)
+    private Map<String, String> logo = new HashMap<>();
 
 }

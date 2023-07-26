@@ -9,8 +9,8 @@ import org.springframework.context.annotation.Configuration;
  */
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "currency-rates-api")
-public class CurrencyRatesApiConfig {
+@ConfigurationProperties(prefix = "exchange-rates-api")
+public class ExchangeRatesApiConfig {
 
     private String apiUrl;
     private int readTimeOut;
