@@ -64,10 +64,23 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
     @Override
     public DateExchangeRatesSummaryDTO getCurrencyRatesForTheDate(LocalDate date) {
 
-        log.info("[START] Generating exchange rates for date[{}]", date);
         List<BuyingRateEntity> buyingRates = buyingRateRepository.getLastEntriesForTheDateGroupedByBankAndCurrency(date);
         List<SellingRateEntity> sellingRates = sellingRateRepository.getLastEntriesForTheDateGroupedByBankAndCurrency(date);
+        List<BankDTO> bankList = bankRepository.findAll().stream().map(bankMapper::convert).toList();
+        log.info("Generating exchange rates summary for date[{}] sellingRates[{}] buyingRates[{}] bankList[{}]", date, buyingRates.size(), sellingRates.size(), bankList.size());
+        return generateDateSummary(buyingRates, sellingRates, bankList);
+    }
 
+    @Override
+    public DateExchangeRatesSummaryDTO getLatestCurrencyRates() {
+        List<BuyingRateEntity> buyingRates = buyingRateRepository.getLatestEntriesGroupedByBankCodeAndCurrencyCode();
+        List<SellingRateEntity> sellingRates = sellingRateRepository.getLatestEntriesGroupedByBankCodeAndCurrencyCode();
+        List<BankDTO> bankList = bankRepository.findAll().stream().map(bankMapper::convert).toList();
+        log.info("Generating latest exchange rates summary for sellingRates[{}] buyingRates[{}] bankList[{}]", buyingRates.size(), sellingRates.size(), bankList.size());
+        return generateDateSummary(buyingRates, sellingRates, bankList);
+    }
+
+    private DateExchangeRatesSummaryDTO generateDateSummary(List<BuyingRateEntity> buyingRates, List<SellingRateEntity> sellingRates, List<BankDTO> bankList) {
         Map<String, List<DateExchangeRatesSummaryDTO.RateEntryDTO>> sellingRatesMap = new TreeMap<>();
         sellingRates
                 .stream()
@@ -104,9 +117,7 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
                     buyingRatesMap.put(currencyCode, entries);
                 });
 
-        List<BankDTO> bankList = bankRepository.findAll().stream().map(bankMapper::convert).toList();
 
-        log.info("[END] Generating exchange rates for date[{}] sellingRatesMap[{}] buyingRatesMap[{}] bankList[{}]", date, sellingRatesMap.size(), buyingRatesMap.size(), bankList.size());
         return new DateExchangeRatesSummaryDTO(sellingRatesMap, buyingRatesMap, bankList);
     }
 

@@ -19,6 +19,7 @@
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <apache.commons.langs.version>3.12.0</apache.commons.langs.version>
         <hypersistence.utils.version>3.5.0</hypersistence.utils.version>
+        <jsonassert.version>1.5.1</jsonassert.version>
     </properties>
     <dependencies>
         <dependency>
@@ -78,6 +79,12 @@
             <groupId>io.hypersistence</groupId>
             <artifactId>hypersistence-utils-hibernate-62</artifactId>
             <version>${hypersistence.utils.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.skyscreamer</groupId>
+            <artifactId>jsonassert</artifactId>
+            <version>${jsonassert.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

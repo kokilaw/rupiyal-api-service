@@ -33,10 +33,9 @@ public class ExchangeRateController {
     @GetMapping("summary")
     public ResponseEntity<DateExchangeRatesSummaryDTO> getSummaryForDate(@RequestParam(value = "targetDate", required = false) String date) {
         log.info("Request received to get exchange rates for date[{}]", date);
-        LocalDate targetDate = StringUtils.isBlank(date)
-                ? LocalDate.now(ZoneId.of("Asia/Kolkata"))
-                : LocalDate.parse(date);
-        DateExchangeRatesSummaryDTO currencyRatesForTheDate = exchangeRateService.getCurrencyRatesForTheDate(targetDate);
+        DateExchangeRatesSummaryDTO currencyRatesForTheDate = StringUtils.isBlank(date)
+                ? exchangeRateService.getLatestCurrencyRates()
+                : exchangeRateService.getCurrencyRatesForTheDate(LocalDate.parse(date));
         return new ResponseEntity<>(currencyRatesForTheDate, HttpStatus.OK);
     }
 

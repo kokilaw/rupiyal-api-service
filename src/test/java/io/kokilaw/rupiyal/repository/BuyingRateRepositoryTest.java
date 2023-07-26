@@ -59,7 +59,7 @@ class BuyingRateRepositoryTest {
 
     @Test
     @DisplayName("When multiple entries are available for a single day, latest entry for the day is retrieved")
-    @Sql({"/test-data/1-buying-rate-repository-test.sql"})
+    @Sql({"/test-data/buying-rate-repository-test-data-1.sql"})
     void whenMultipleEntriesAvailableForSingleDate_LatestEntryForTheDayIsRetrieved() {
         List<BuyingRateEntity> allEntries = buyingRateRepository.findAll();
         assertEquals(4, allEntries.size());
@@ -73,7 +73,7 @@ class BuyingRateRepositoryTest {
 
     @Test
     @DisplayName("Given multiple rates over multiple period, latest rates are fetched when queried")
-    @Sql({"/test-data/3-buying-rate-repository-test.sql"})
+    @Sql({"/test-data/buying-rate-repository-test-data-2.sql"})
     void givenMultipleRatesOverMultipleData_whenLatestRatesAreQueried_latestRatesAreFetched() {
         List<BuyingRateEntity> allEntries = buyingRateRepository.findAll();
         assertEquals(8, allEntries.size());

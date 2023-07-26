@@ -5,6 +5,7 @@ import io.kokilaw.rupiyal.dto.BankDTO;
 import io.kokilaw.rupiyal.dto.FetchTaskDTO;
 import io.kokilaw.rupiyal.dto.ProcessorType;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,7 @@ public class GoogleSheetIntegrationTest {
     }
 
     @Test
+    @Disabled("In order to avoid load on API")
     @DisplayName("Currency data is fetched and saved when google sheet fetch is initiated")
     void whenGoogleSheetFetchInitiated_currencyDataIsFetchedAndSaved() {
 
@@ -73,6 +75,7 @@ public class GoogleSheetIntegrationTest {
     }
 
     @Test
+    @Disabled("In order to avoid load on API")
     @DisplayName("Currency data is fetched and saved when google sheet fetch is initiated with custom period")
     void whenGoogleSheetFetchInitiated_withCustomPeriod_currencyDataIsFetchedAndSaved() {
 

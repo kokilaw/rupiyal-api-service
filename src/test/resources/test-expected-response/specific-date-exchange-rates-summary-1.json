@@ -1,0 +1,100 @@
+{
+  "sellingRates": {
+    "GBP": [
+      {
+        "bankCode": "BOC",
+        "rate": "406.5410"
+      },
+      {
+        "bankCode": "NSB",
+        "rate": "406.5410"
+      }
+    ],
+    "USD": [
+      {
+        "bankCode": "BOC",
+        "rate": "306.5410"
+      }
+    ]
+  },
+  "buyingRates": {
+    "GBP": [
+      {
+        "bankCode": "BOC",
+        "rate": "406.5410"
+      },
+      {
+        "bankCode": "NSB",
+        "rate": "406.5410"
+      }
+    ],
+    "USD": [
+      {
+        "bankCode": "BOC",
+        "rate": "306.5410"
+      }
+    ]
+  },
+  "banks": [
+    {
+      "bankCode": "NTB",
+      "shortName": "NTB",
+      "longName": "Nations Truest Bank"
+    },
+    {
+      "bankCode": "COMBANK",
+      "shortName": "COMBANK",
+      "longName": "Commercial Bank"
+    },
+    {
+      "bankCode": "HNB",
+      "shortName": "HNB",
+      "longName": "Hatton National Bank"
+    },
+    {
+      "bankCode": "BOC",
+      "shortName": "BOC",
+      "longName": "Bank Of Ceylon"
+    },
+    {
+      "bankCode": "SAMPATH",
+      "shortName": "Sampath Bank",
+      "longName": "Sampath Bank"
+    },
+    {
+      "bankCode": "SEYLAN",
+      "shortName": "Seylan Bank",
+      "longName": "Seylan Bank"
+    },
+    {
+      "bankCode": "NDB",
+      "shortName": "NDB",
+      "longName": "National Development Bank"
+    },
+    {
+      "bankCode": "NSB",
+      "shortName": "NSB",
+      "longName": "National Savings Bank"
+    },
+    {
+      "bankCode": "DFCC",
+      "shortName": "DFCC Bank",
+      "longName": "DFCC Bank"
+    },
+    {
+      "bankCode": "PEOPLES",
+      "shortName": "Peoples Bank",
+      "longName": "Peoples Bank"
+    },
+    {
+      "bankCode": "UNION",
+      "shortName": "Union Bank",
+      "longName": "Union Bank"
+    },
+    {
+      "bankCode": "HSBC",
+      "shortName": "HSBC",
+      "longName": "HSBC Bank"
+    }
+  ]
+}

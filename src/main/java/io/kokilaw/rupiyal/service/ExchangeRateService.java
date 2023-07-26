@@ -15,5 +15,6 @@ public interface ExchangeRateService {
     void saveCurrencyRates(ExchangeRateType exchangeRateType, List<ExchangeRateDTO> currencyRates);
 
     DateExchangeRatesSummaryDTO getCurrencyRatesForTheDate(LocalDate date);
+    DateExchangeRatesSummaryDTO getLatestCurrencyRates();
 
 }
