@@ -59,7 +59,7 @@ class SellingRateRepositoryTest {
 
     @Test
     @DisplayName("When multiple entries are available for a single day, latest entry for the day is retrieved")
-    @Sql({"/test-data/2-selling-rate-repository.sql"})
+    @Sql({"/test-data/2-selling-rate-repository-test.sql"})
     void whenMultipleEntriesAvailableForSingleDate_LatestEntryForTheDayIsRetrieved() {
         List<SellingRateEntity> allEntries = sellingRateRepository.findAll();
         assertEquals(4, allEntries.size());
@@ -68,7 +68,21 @@ class SellingRateRepositoryTest {
 
         Optional<SellingRateEntity> usdEntry = entries.stream().filter(buyingRateEntity -> "USD".equals(buyingRateEntity.getCurrencyCode())).findAny();
         assertEquals(Boolean.TRUE, usdEntry.isPresent());
-        usdEntry.ifPresent(sellingRateEntity -> assertEquals(0, usdEntry.get().getRate().compareTo(new BigDecimal("306.5410"))));
+        usdEntry.ifPresent(sellingRateEntity -> assertEquals("306.5410", usdEntry.get().getRate().toPlainString()));
+    }
+
+    @Test
+    @DisplayName("Given multiple rates over multiple period, latest rates are fetched when queried")
+    @Sql({"/test-data/4-selling-rate-repository-test.sql"})
+    void givenMultipleRatesOverMultipleData_whenLatestRatesAreQueried_latestRatesAreFetched() {
+        List<SellingRateEntity> allEntries = sellingRateRepository.findAll();
+        assertEquals(8, allEntries.size());
+        List<SellingRateEntity> entries = sellingRateRepository.getLatestEntriesGroupedByBankCodeAndCurrencyCode();
+        assertEquals(3, entries.size());
+
+        Optional<SellingRateEntity> usdEntry = entries.stream().filter(buyingRateEntity -> "USD".equals(buyingRateEntity.getCurrencyCode())).findAny();
+        assertEquals(Boolean.TRUE, usdEntry.isPresent());
+        usdEntry.ifPresent(sellingRateEntity -> assertEquals("308.5410", usdEntry.get().getRate().toPlainString()));
     }
 
 }

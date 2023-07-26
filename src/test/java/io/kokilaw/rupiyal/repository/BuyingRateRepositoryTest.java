@@ -16,7 +16,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Created by kokilaw on 2023-06-13
@@ -58,7 +59,7 @@ class BuyingRateRepositoryTest {
 
     @Test
     @DisplayName("When multiple entries are available for a single day, latest entry for the day is retrieved")
-    @Sql({"/test-data/1-buying-rate-repository.sql"})
+    @Sql({"/test-data/1-buying-rate-repository-test.sql"})
     void whenMultipleEntriesAvailableForSingleDate_LatestEntryForTheDayIsRetrieved() {
         List<BuyingRateEntity> allEntries = buyingRateRepository.findAll();
         assertEquals(4, allEntries.size());
@@ -68,6 +69,20 @@ class BuyingRateRepositoryTest {
         Optional<BuyingRateEntity> usdEntry = entries.stream().filter(buyingRateEntity -> "USD".equals(buyingRateEntity.getCurrencyCode())).findAny();
         assertEquals(Boolean.TRUE, usdEntry.isPresent());
         usdEntry.ifPresent(buyingRateEntity -> assertEquals(0, usdEntry.get().getRate().compareTo(new BigDecimal("306.5410"))));
+    }
+
+    @Test
+    @DisplayName("Given multiple rates over multiple period, latest rates are fetched when queried")
+    @Sql({"/test-data/3-buying-rate-repository-test.sql"})
+    void givenMultipleRatesOverMultipleData_whenLatestRatesAreQueried_latestRatesAreFetched() {
+        List<BuyingRateEntity> allEntries = buyingRateRepository.findAll();
+        assertEquals(8, allEntries.size());
+        List<BuyingRateEntity> entries = buyingRateRepository.getLatestEntriesGroupedByBankCodeAndCurrencyCode();
+        assertEquals(3, entries.size());
+
+        Optional<BuyingRateEntity> usdEntry = entries.stream().filter(buyingRateEntity -> "USD".equals(buyingRateEntity.getCurrencyCode())).findAny();
+        assertEquals(Boolean.TRUE, usdEntry.isPresent());
+        usdEntry.ifPresent(buyingRateEntity -> assertEquals("304.5410", usdEntry.get().getRate().toPlainString()));
     }
 
 }

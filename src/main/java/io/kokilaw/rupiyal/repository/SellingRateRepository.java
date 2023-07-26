@@ -21,4 +21,7 @@ public interface SellingRateRepository extends JpaRepository<SellingRateEntity, 
     @Query(value = "SELECT DISTINCT ON (bank_code, currency_code, date) * FROM selling_rate WHERE date = ?1 ORDER BY bank_code, currency_code, date, created_at DESC", nativeQuery = true)
     List<SellingRateEntity> getLastEntriesForTheDateGroupedByBankAndCurrency(LocalDate date);
 
+    @Query(value = "SELECT DISTINCT ON (bank_code, currency_code) * FROM selling_rate ORDER BY bank_code, currency_code, created_at DESC", nativeQuery = true)
+    List<SellingRateEntity> getLatestEntriesGroupedByBankCodeAndCurrencyCode();
+
 }
