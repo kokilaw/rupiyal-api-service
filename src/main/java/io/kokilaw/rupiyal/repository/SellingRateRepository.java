@@ -1,6 +1,5 @@
 package io.kokilaw.rupiyal.repository;
 
-import io.kokilaw.rupiyal.repository.model.BankEntity;
 import io.kokilaw.rupiyal.repository.model.SellingRateEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,7 +16,7 @@ import java.util.Optional;
 @Repository
 public interface SellingRateRepository extends JpaRepository<SellingRateEntity, Long> {
 
-    Optional<SellingRateEntity> findByBankAndCurrencyCodeAndDateAndRate(BankEntity bank, String currencyCode, LocalDate date, BigDecimal rate);
+    Optional<SellingRateEntity> findByBankCodeAndCurrencyCodeAndDateAndRate(String bankCode, String currencyCode, LocalDate date, BigDecimal rate);
 
     @Query(value = "SELECT DISTINCT ON (bank_code, currency_code, date) * FROM selling_rate WHERE date = ?1 ORDER BY bank_code, currency_code, date, created_at DESC", nativeQuery = true)
     List<SellingRateEntity> getLastEntriesForTheDateGroupedByBankAndCurrency(LocalDate date);

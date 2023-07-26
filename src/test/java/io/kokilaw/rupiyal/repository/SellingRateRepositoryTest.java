@@ -39,7 +39,7 @@ class SellingRateRepositoryTest {
                 .orElseThrow(() -> new RuntimeException("Bank not found!"));
 
         SellingRateEntity entryToBeSaved = SellingRateEntity.builder()
-                .bank(bankEntity)
+                .bankCode(bankEntity.getBankCode())
                 .date(LocalDate.now())
                 .currencyCode("USD")
                 .rate(new BigDecimal("294.50"))

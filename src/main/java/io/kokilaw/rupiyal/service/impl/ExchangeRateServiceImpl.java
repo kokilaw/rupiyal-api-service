@@ -72,7 +72,7 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
                     List<DateExchangeRatesSummaryDTO.RateEntryDTO> entries = sellingRates.stream()
                             .filter(sellingRateEntity -> sellingRateEntity.getCurrencyCode().equals(currencyCode))
                             .map(sellingRateEntity -> new DateExchangeRatesSummaryDTO.RateEntryDTO(
-                                    sellingRateEntity.getBank().getBankCode(),
+                                    sellingRateEntity.getBankCode(),
                                     PriceUtils.formatPriceInDefaultFormat(sellingRateEntity.getRate()),
                                     DateUtils.getDateTimeWithSystemFormat(sellingRateEntity.getUpdatedAt())
                             ))
@@ -90,7 +90,7 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
                     List<DateExchangeRatesSummaryDTO.RateEntryDTO> entries = buyingRates.stream()
                             .filter(buyingRateEntity -> buyingRateEntity.getCurrencyCode().equals(currencyCode))
                             .map(buyingRateEntity -> new DateExchangeRatesSummaryDTO.RateEntryDTO(
-                                    buyingRateEntity.getBank().getBankCode(),
+                                    buyingRateEntity.getBankCode(),
                                     PriceUtils.formatPriceInDefaultFormat(buyingRateEntity.getRate()),
                                     DateUtils.getDateTimeWithSystemFormat(buyingRateEntity.getUpdatedAt())
                             ))
@@ -122,14 +122,14 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
             List<SellingRateEntity> sellingRateEntities = rates
                     .stream()
                     .map(rateDTO -> SellingRateEntity.builder()
-                            .bank(bankEntityCache.get(bankCode))
+                            .bankCode(bankCode)
                             .rate(rateDTO.rate())
                             .currencyCode(rateDTO.currencyCode())
                             .date(rateDTO.date())
                             .build())
                     .toList();
-            sellingRateEntities.forEach(sellingRateEntity -> sellingRateRepository.findByBankAndCurrencyCodeAndDateAndRate(
-                                    sellingRateEntity.getBank(),
+            sellingRateEntities.forEach(sellingRateEntity -> sellingRateRepository.findByBankCodeAndCurrencyCodeAndDateAndRate(
+                                    sellingRateEntity.getBankCode(),
                                     sellingRateEntity.getCurrencyCode(),
                                     sellingRateEntity.getDate(),
                                     sellingRateEntity.getRate()
@@ -162,13 +162,13 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
             List<BuyingRateEntity> buyingRateEntities = rates
                     .stream()
                     .map(rateDTO -> BuyingRateEntity.builder()
-                            .bank(bankEntityCache.get(bankCode))
+                            .bankCode(bankCode)
                             .rate(rateDTO.rate())
                             .currencyCode(rateDTO.currencyCode())
                             .date(rateDTO.date())
                             .build())
                     .toList();
-            buyingRateEntities.forEach(buyingRateEntity -> buyingRateRepository.findByBankAndCurrencyCodeAndDateAndRate(buyingRateEntity.getBank(), buyingRateEntity.getCurrencyCode(), buyingRateEntity.getDate(), buyingRateEntity.getRate())
+            buyingRateEntities.forEach(buyingRateEntity -> buyingRateRepository.findByBankCodeAndCurrencyCodeAndDateAndRate(buyingRateEntity.getBankCode(), buyingRateEntity.getCurrencyCode(), buyingRateEntity.getDate(), buyingRateEntity.getRate())
                     .ifPresentOrElse(
                             existingEntry -> {
                                 existingEntry.setUpdatedAt(LocalDateTime.now());
