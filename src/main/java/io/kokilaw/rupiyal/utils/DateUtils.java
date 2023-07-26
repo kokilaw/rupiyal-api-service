@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -13,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import static io.kokilaw.rupiyal.Constants.ASIA_COLOMBO_ZONE_ID;
 import static java.time.LocalDate.parse;
 
 /**
@@ -61,6 +63,13 @@ public class DateUtils {
     public static String getDateTimeWithSystemFormat(LocalDateTime dateTime, ZoneId zoneId) {
         ZonedDateTime dateTimeWithZone = ZonedDateTime.of(dateTime, zoneId);
         return DEFAULT_DATE_TIME_FORMAT.format(dateTimeWithZone);
+    }
+
+    public static LocalDateTime getBackDatedTimeBasedOnTargetDate(LocalDate targetDate) {
+        if (targetDate.isBefore(LocalDate.now(ASIA_COLOMBO_ZONE_ID))) {
+            return LocalDateTime.of(targetDate, LocalTime.now());
+        }
+        return LocalDateTime.now();
     }
 
 }

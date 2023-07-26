@@ -4,6 +4,7 @@ import io.kokilaw.rupiyal.client.ExchangeRatesAPIClient;
 import io.kokilaw.rupiyal.config.ExchangeRatesApiConfig;
 import io.kokilaw.rupiyal.dto.ExchangeRateDTO;
 import io.kokilaw.rupiyal.exception.ExchangeRatesAPIException;
+import io.kokilaw.rupiyal.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
@@ -94,6 +96,7 @@ public class ExchangeRatesAPIClientImpl implements ExchangeRatesAPIClient {
     }
 
     private List<ExchangeRateDTO> mapToDTO(BankRates[] bankRatesArray, LocalDate targetDate) {
+        LocalDateTime entryCreationTime = DateUtils.getBackDatedTimeBasedOnTargetDate(targetDate);
         List<BankRates> bankRatesList = Arrays.asList(bankRatesArray);
         return bankRatesList
                 .stream()
@@ -101,7 +104,13 @@ public class ExchangeRatesAPIClientImpl implements ExchangeRatesAPIClient {
                         .stream()
                         .map(rate -> new TempRate(rate.currencyCode(), rate.rate(), bankRates.internalBankCode())))
                 .filter(tempRate -> StringUtils.isNotEmpty(tempRate.rate()) && !tempRate.rate().contains("-"))
-                .map(tempRate -> new ExchangeRateDTO(targetDate, new BigDecimal(tempRate.rate()), tempRate.currencyCode(), tempRate.bankCode()))
+                .map(tempRate -> new ExchangeRateDTO(
+                        targetDate,
+                        new BigDecimal(tempRate.rate()),
+                        tempRate.currencyCode(),
+                        tempRate.bankCode(),
+                        entryCreationTime,
+                        entryCreationTime))
                 .toList();
     }
 

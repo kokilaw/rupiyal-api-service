@@ -1,5 +1,6 @@
 package io.kokilaw.rupiyal.utils;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -61,6 +62,24 @@ class DateUtilsTest {
     void givenLocalDateTimeInstance_shouldReturnFormattedStringWithTimeZone() {
         String formattedDateTime = DateUtils.getDateTimeWithSystemFormat(LocalDateTime.of(2023, 7, 11, 11, 1, 55), ZoneId.of("+05:30"));
         assertEquals("2023-07-11T11:01:55+05:30", formattedDateTime);
+    }
+
+    @Test
+    @DisplayName("Should return correct back-dated date based on target date")
+    void givenTargetData_shouldReturnCorrectBankDatedDate() {
+
+        LocalDate CURRENT_DATE = LocalDate.now();
+        LocalDate OLDER_DATE = LocalDate.of(2023, 5, 27);
+
+        LocalDateTime currentDateScenario = DateUtils.getBackDatedTimeBasedOnTargetDate(CURRENT_DATE);
+        Assertions.assertEquals(CURRENT_DATE.getYear(), currentDateScenario.getYear());
+        Assertions.assertEquals(CURRENT_DATE.getMonthValue(), currentDateScenario.getMonthValue());
+        Assertions.assertEquals(CURRENT_DATE.getDayOfMonth(), currentDateScenario.getDayOfMonth());
+
+        LocalDateTime olderDateScenario = DateUtils.getBackDatedTimeBasedOnTargetDate(OLDER_DATE);
+        Assertions.assertEquals(OLDER_DATE.getYear(), olderDateScenario.getYear());
+        Assertions.assertEquals(OLDER_DATE.getMonthValue(), olderDateScenario.getMonthValue());
+        Assertions.assertEquals(OLDER_DATE.getDayOfMonth(), olderDateScenario.getDayOfMonth());
     }
 
 }

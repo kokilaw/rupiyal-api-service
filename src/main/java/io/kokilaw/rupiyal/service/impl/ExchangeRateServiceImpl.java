@@ -1,9 +1,9 @@
 package io.kokilaw.rupiyal.service.impl;
 
 import io.kokilaw.rupiyal.dto.BankDTO;
+import io.kokilaw.rupiyal.dto.DateExchangeRatesSummaryDTO;
 import io.kokilaw.rupiyal.dto.ExchangeRateDTO;
 import io.kokilaw.rupiyal.dto.ExchangeRateType;
-import io.kokilaw.rupiyal.dto.DateExchangeRatesSummaryDTO;
 import io.kokilaw.rupiyal.exception.NotFoundException;
 import io.kokilaw.rupiyal.mapper.BankMapper;
 import io.kokilaw.rupiyal.repository.BankRepository;
@@ -21,7 +21,12 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by kokilaw on 2023-06-13
@@ -126,6 +131,8 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
                             .rate(rateDTO.rate())
                             .currencyCode(rateDTO.currencyCode())
                             .date(rateDTO.date())
+                            .createdAt(rateDTO.createdAt())
+                            .updatedAt(rateDTO.updatedAt())
                             .build())
                     .toList();
             sellingRateEntities.forEach(sellingRateEntity -> sellingRateRepository.findByBankCodeAndCurrencyCodeAndDateAndRate(
@@ -166,6 +173,8 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
                             .rate(rateDTO.rate())
                             .currencyCode(rateDTO.currencyCode())
                             .date(rateDTO.date())
+                            .createdAt(rateDTO.createdAt())
+                            .updatedAt(rateDTO.updatedAt())
                             .build())
                     .toList();
             buyingRateEntities.forEach(buyingRateEntity -> buyingRateRepository.findByBankCodeAndCurrencyCodeAndDateAndRate(buyingRateEntity.getBankCode(), buyingRateEntity.getCurrencyCode(), buyingRateEntity.getDate(), buyingRateEntity.getRate())
