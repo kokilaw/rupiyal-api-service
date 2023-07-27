@@ -1,5 +1,6 @@
 package io.kokilaw.rupiyal.processor.impl;
 
+import io.kokilaw.rupiyal.Constants;
 import io.kokilaw.rupiyal.client.ExchangeRatesAPIClient;
 import io.kokilaw.rupiyal.dto.ExchangeRateDTO;
 import io.kokilaw.rupiyal.dto.ExchangeRateType;
@@ -12,6 +13,7 @@ import io.kokilaw.rupiyal.utils.DateUtils;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -44,6 +46,7 @@ public class GoogleSheetAPIProcessor implements ExchangeRatesFetchProcessor {
     }
 
     @Override
+    @CacheEvict(value = Constants.CacheKeys.LATEST_RATES_SUMMARY, allEntries = true)
     public void execute(FetchTaskDTO taskDTO) {
         if (isLatestRatesFetchTask(taskDTO)) {
             executeLatestRatesFetchTask();

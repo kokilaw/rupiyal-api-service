@@ -1,5 +1,6 @@
 package io.kokilaw.rupiyal.service.impl;
 
+import io.kokilaw.rupiyal.Constants;
 import io.kokilaw.rupiyal.dto.BankDTO;
 import io.kokilaw.rupiyal.dto.DateExchangeRatesSummaryDTO;
 import io.kokilaw.rupiyal.dto.ExchangeRateDTO;
@@ -17,6 +18,7 @@ import io.kokilaw.rupiyal.utils.DateUtils;
 import io.kokilaw.rupiyal.utils.PriceUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -72,6 +74,7 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
     }
 
     @Override
+    @Cacheable(Constants.CacheKeys.LATEST_RATES_SUMMARY)
     public DateExchangeRatesSummaryDTO getLatestCurrencyRates() {
         List<BuyingRateEntity> buyingRates = buyingRateRepository.getLatestEntriesGroupedByBankCodeAndCurrencyCode();
         List<SellingRateEntity> sellingRates = sellingRateRepository.getLatestEntriesGroupedByBankCodeAndCurrencyCode();
