@@ -37,6 +37,7 @@ public class BankEntity {
 
     @Column(name="logo")
     @Type(JsonType.class)
+    @Builder.Default
     private Map<String, String> logo = new HashMap<>();
 
 }
