@@ -3,7 +3,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: ${DATABASE_USERNAME:postgres}
     password: ${DATABASE_PASSWORD:password}
-    url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/rupiyal_db
+    url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:rupiyal_db}
   jpa:
     show-sql: false
     hibernate:
