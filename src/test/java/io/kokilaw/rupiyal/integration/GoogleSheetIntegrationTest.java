@@ -54,7 +54,7 @@ public class GoogleSheetIntegrationTest {
         Map<String, BankDTO> bankEntriesByBankCode = Arrays.stream(Objects.requireNonNull(response.getBody()))
                 .collect(Collectors.toMap(BankDTO::bankCode, Function.identity()));
 
-        assertEquals(12, bankEntriesByBankCode.keySet().size());
+        assertEquals(13, bankEntriesByBankCode.keySet().size());
         assertTrue(bankEntriesByBankCode.containsKey("NTB"));
         assertTrue(bankEntriesByBankCode.containsKey("COMBANK"));
         assertTrue(bankEntriesByBankCode.containsKey("HNB"));

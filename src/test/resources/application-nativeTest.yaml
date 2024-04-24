@@ -1,0 +1,28 @@
+spring:
+  test:
+    database:
+      replace: none
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:password}
+    url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/rupiyal_db
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+    defer-datasource-initialization: false
+    properties:
+      hibernate:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    baseline-on-migrate: true
+    enabled: true
+    baseline-description: "init"
+    baseline-version: 0
+
+
+exchange-rates-api:
+  api-url: https://script.google.com/macros/s/AKfycbw898vRhVlDf9scBwt7kk4Phis6G3iWrr8IP7ESfuK1zPJE7_yKqGH0cMnKFImFYc0X/exec
+  read-timeout: 10000
+  connect-timeout: 10000

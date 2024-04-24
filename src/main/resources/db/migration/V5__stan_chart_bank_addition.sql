@@ -1,0 +1,2 @@
+INSERT INTO bank (bank_code, short_name, long_name, logo)
+VALUES ('STANCHART', 'STANCHART', 'Standard Chartered Bank', '{"defaultUrl": "https://assets.lkr.exchange/images/logos/stanchart-logo-min.png"}')

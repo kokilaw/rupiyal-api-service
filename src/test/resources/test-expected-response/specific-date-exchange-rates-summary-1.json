@@ -95,6 +95,11 @@
       "bankCode": "HSBC",
       "shortName": "HSBC",
       "longName": "HSBC Bank"
+    },
+    {
+      "bankCode": "STANCHART",
+      "shortName": "STANCHART",
+      "longName": "Standard Chartered Bank"
     }
   ]
 }
