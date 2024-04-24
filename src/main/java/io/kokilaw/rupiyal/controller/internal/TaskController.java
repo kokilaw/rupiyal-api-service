@@ -1,5 +1,6 @@
 package io.kokilaw.rupiyal.controller.internal;
 
+import io.kokilaw.rupiyal.aspect.annotation.UpdateRatesSummaryCache;
 import io.kokilaw.rupiyal.dto.FetchTaskDTO;
 import io.kokilaw.rupiyal.processor.ExchangeRatesFetchProcessorRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
