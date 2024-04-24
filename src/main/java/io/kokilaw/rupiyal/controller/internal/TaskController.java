@@ -26,7 +26,6 @@ public class TaskController {
     }
 
     @PostMapping("/fetch")
-    @UpdateRatesSummaryCache
     public ResponseEntity<Void> executeFetchTask(@RequestBody FetchTaskDTO taskDTO) {
         exchangeRatesFetchProcessorRegistry.currencyFetchProcessor(taskDTO.processorType())
                 .execute(taskDTO);
