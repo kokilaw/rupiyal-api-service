@@ -1,0 +1,128 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+paths:
+  /internal/tasks/fetch:
+    post:
+      tags:
+      - task-controller
+      operationId: executeFetchTask
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FetchTaskDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+  /internal/exchange-rates/summary:
+    get:
+      tags:
+      - exchange-rate-controller
+      operationId: getSummaryForDate
+      parameters:
+      - name: targetDate
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/DateExchangeRatesSummaryDTO'
+  /internal/banks:
+    get:
+      tags:
+      - bank-controller
+      operationId: getBanks
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BankDTO'
+  /internal/banks/{bankCode}:
+    get:
+      tags:
+      - bank-controller
+      operationId: getBank
+      parameters:
+      - name: bankCode
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BankDTO'
+components:
+  schemas:
+    FetchTaskDTO:
+      type: object
+      properties:
+        processorType:
+          type: string
+          enum:
+          - GOOGLE_SHEET_API
+        fromDate:
+          type: string
+          format: date
+        toDate:
+          type: string
+          format: date
+    BankDTO:
+      type: object
+      properties:
+        bankCode:
+          type: string
+        shortName:
+          type: string
+        longName:
+          type: string
+        logo:
+          type: object
+          additionalProperties:
+            type: string
+    DateExchangeRatesSummaryDTO:
+      type: object
+      properties:
+        sellingRates:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/RateEntryDTO'
+        buyingRates:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/RateEntryDTO'
+        banks:
+          type: array
+          items:
+            $ref: '#/components/schemas/BankDTO'
+    RateEntryDTO:
+      type: object
+      properties:
+        bankCode:
+          type: string
+        rate:
+          type: string
+        lastUpdated:
+          type: string
