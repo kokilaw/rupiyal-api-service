@@ -1,6 +1,7 @@
 package io.kokilaw.rupiyal.controller.internal;
 
 import io.kokilaw.rupiyal.dto.DateExchangeRatesSummaryDTO;
+import io.kokilaw.rupiyal.dto.ExtendedRateEntryDTO;
 import io.kokilaw.rupiyal.service.ExchangeRateService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by kokilaw on 2023-07-21
@@ -27,6 +31,26 @@ public class ExchangeRateController {
     @Autowired
     public ExchangeRateController(ExchangeRateService exchangeRateService) {
         this.exchangeRateService = exchangeRateService;
+    }
+
+    @GetMapping("/buying")
+    public ResponseEntity<Map<String, List<ExtendedRateEntryDTO>>> getBuyingRates(
+            @RequestParam(value = "currencyCode") String currencyCode,
+            @RequestParam(value = "lastNumberOfDays", required = false, defaultValue = "1") String lastNumberOfDays
+    ) {
+        log.info("[BUYING] Request received to get exchange rates for currencyCode[{}] lastNumberOfDays[{}]", currencyCode, lastNumberOfDays);
+        Map<String, List<ExtendedRateEntryDTO>> entries = exchangeRateService.getBuyingRates(currencyCode, Integer.parseInt(lastNumberOfDays));
+        return new ResponseEntity<>(entries, HttpStatus.OK);
+    }
+
+    @GetMapping("/selling")
+    public ResponseEntity<Map<String, List<ExtendedRateEntryDTO>>> getSellingRates(
+            @RequestParam(value = "currencyCode") String currencyCode,
+            @RequestParam(value = "lastNumberOfDays", required = false, defaultValue = "1") String lastNumberOfDays
+    ) {
+        log.info("[SELLING] Request received to get exchange rates for currencyCode[{}] lastNumberOfDays[{}]", currencyCode, lastNumberOfDays);
+        Map<String, List<ExtendedRateEntryDTO>> entries = exchangeRateService.getSellingRates(currencyCode, Integer.parseInt(lastNumberOfDays));
+        return new ResponseEntity<>(entries, HttpStatus.OK);
     }
 
     @GetMapping("summary")

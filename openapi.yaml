@@ -38,6 +38,62 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/DateExchangeRatesSummaryDTO'
+  /internal/exchange-rates/selling:
+    get:
+      tags:
+      - exchange-rate-controller
+      operationId: getSellingRates
+      parameters:
+      - name: currencyCode
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: lastNumberOfDays
+        in: query
+        required: false
+        schema:
+          type: string
+          default: "1"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ExtendedRateEntryDTO'
+  /internal/exchange-rates/buying:
+    get:
+      tags:
+      - exchange-rate-controller
+      operationId: getBuyingRates
+      parameters:
+      - name: currencyCode
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: lastNumberOfDays
+        in: query
+        required: false
+        schema:
+          type: string
+          default: "1"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ExtendedRateEntryDTO'
   /internal/banks:
     get:
       tags:
@@ -123,6 +179,17 @@ components:
         bankCode:
           type: string
         rate:
+          type: string
+        lastUpdated:
+          type: string
+    ExtendedRateEntryDTO:
+      type: object
+      properties:
+        bankCode:
+          type: string
+        rate:
+          type: string
+        date:
           type: string
         lastUpdated:
           type: string

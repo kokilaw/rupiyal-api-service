@@ -1,9 +1,6 @@
 package io.kokilaw.rupiyal.service.impl;
 
-import io.kokilaw.rupiyal.dto.BankDTO;
-import io.kokilaw.rupiyal.dto.DateExchangeRatesSummaryDTO;
-import io.kokilaw.rupiyal.dto.ExchangeRateDTO;
-import io.kokilaw.rupiyal.dto.ExchangeRateType;
+import io.kokilaw.rupiyal.dto.*;
 import io.kokilaw.rupiyal.exception.NotFoundException;
 import io.kokilaw.rupiyal.mapper.BankMapper;
 import io.kokilaw.rupiyal.repository.BankRepository;
@@ -21,12 +18,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Created by kokilaw on 2023-06-13
@@ -78,6 +72,34 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
         List<BankDTO> bankList = bankRepository.findAll().stream().map(bankMapper::convert).toList();
         log.info("Generating latest exchange rates summary for sellingRates[{}] buyingRates[{}] bankList[{}]", buyingRates.size(), sellingRates.size(), bankList.size());
         return generateDateSummary(buyingRates, sellingRates, bankList);
+    }
+
+    @Override
+    public Map<String, List<ExtendedRateEntryDTO>> getBuyingRates(String currencyCode, int lastNumberOfDays) {
+        LocalDate currentDate = LocalDate.now();
+        LocalDate fromDate = currentDate.minusDays(lastNumberOfDays - 1);
+        log.info("Retrieving buying rates currencyCode[{}] fromDate[{}] currentDate[{}]", currencyCode, fromDate, currentDate);
+        List<BuyingRateEntity> buyingRates = buyingRateRepository.getRatesForCurrencyAndPeriod(currencyCode, fromDate, currentDate);
+        return buyingRates.stream().map(entry -> new ExtendedRateEntryDTO(
+                entry.getBankCode(),
+                PriceUtils.formatPriceInDefaultFormat(entry.getRate()),
+                entry.getDate().toString(),
+                DateUtils.getDateTimeWithSystemFormat(entry.getUpdatedAt()))
+        ).collect(Collectors.groupingBy(ExtendedRateEntryDTO::bankCode));
+    }
+
+    @Override
+    public Map<String, List<ExtendedRateEntryDTO>> getSellingRates(String currencyCode, int lastNumberOfDays) {
+        LocalDate currentDate = LocalDate.now();
+        LocalDate fromDate = currentDate.minusDays(lastNumberOfDays - 1);
+        log.info("Retrieving selling rates currencyCode[{}] fromDate[{}] currentDate[{}]", currencyCode, fromDate, currentDate);
+        List<BuyingRateEntity> sellingRates = sellingRateRepository.getRatesForCurrencyAndPeriod(currencyCode, fromDate, currentDate);
+        return sellingRates.stream().map(entry -> new ExtendedRateEntryDTO(
+                entry.getBankCode(),
+                PriceUtils.formatPriceInDefaultFormat(entry.getRate()),
+                entry.getDate().toString(),
+                DateUtils.getDateTimeWithSystemFormat(entry.getUpdatedAt()))
+        ).collect(Collectors.groupingBy(ExtendedRateEntryDTO::bankCode));
     }
 
     private DateExchangeRatesSummaryDTO generateDateSummary(List<BuyingRateEntity> buyingRates, List<SellingRateEntity> sellingRates, List<BankDTO> bankList) {
