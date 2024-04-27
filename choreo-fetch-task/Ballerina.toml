@@ -1,0 +1,8 @@
+[package]
+org = "kokilaw"
+name = "exchange_rates_fetch_task"
+version = "0.0.1"
+distribution = "2201.8.6"
+
+[build-options]
+observabilityIncluded = true
