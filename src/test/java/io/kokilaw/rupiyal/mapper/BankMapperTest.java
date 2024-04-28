@@ -22,6 +22,7 @@ class BankMapperTest {
                 .longName("Nations Trust Bank")
                 .shortName("NTB")
                 .logo(Map.of("defaultUrl", "IMAGE_URL"))
+                .themeConfig(Map.of("accentColor", "#000000"))
                 .build();
         BankDTO bankDTO = BankMapper.INSTANCE.convert(bankEntity);
         assertEquals(bankDTO.bankCode(), bankEntity.getBankCode());
@@ -29,6 +30,7 @@ class BankMapperTest {
         assertEquals(bankDTO.longName(), bankEntity.getLongName());
         assertTrue(bankDTO.logo().containsKey("defaultUrl"));
         assertEquals("IMAGE_URL", bankDTO.logo().get("defaultUrl"));
+        assertEquals("#000000", bankDTO.themeConfig().get("accentColor"));
     }
 
 }
