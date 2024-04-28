@@ -92,7 +92,7 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
         LocalDate currentDate = LocalDate.now();
         LocalDate fromDate = currentDate.minusDays(lastNumberOfDays - 1);
         log.info("Retrieving selling rates currencyCode[{}] fromDate[{}] currentDate[{}]", currencyCode, fromDate, currentDate);
-        List<BuyingRateEntity> sellingRates = sellingRateRepository.getRatesForCurrencyAndPeriod(currencyCode, fromDate, currentDate);
+        List<SellingRateEntity> sellingRates = sellingRateRepository.getRatesForCurrencyAndPeriod(currencyCode, fromDate, currentDate);
         return sellingRates.stream().map(entry -> new ExtendedRateEntryDTO(
                 entry.getBankCode(),
                 PriceUtils.formatPriceInDefaultFormat(entry.getRate()),

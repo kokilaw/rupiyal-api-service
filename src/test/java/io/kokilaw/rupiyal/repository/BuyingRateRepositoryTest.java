@@ -85,4 +85,17 @@ class BuyingRateRepositoryTest {
         usdEntry.ifPresent(buyingRateEntity -> assertEquals("304.5410", usdEntry.get().getRate().toPlainString()));
     }
 
+    @Test
+    @DisplayName("Given multiple rates over multiple period, latest rates are fetched over given period")
+    @Sql({"/test-data/buying-rate-repository-test-data-2.sql"})
+    void givenMultipleRatesOverMultipleData_whenLatestRatesAreQueried_latestRatesAreFetchedOverGivenPeriod() {
+        List<BuyingRateEntity> allEntries = buyingRateRepository.findAll();
+        assertEquals(8, allEntries.size());
+
+        List<BuyingRateEntity> results = buyingRateRepository
+                .getRatesForCurrencyAndPeriod("USD", LocalDate.parse("2023-07-20"), LocalDate.parse("2023-07-21"));
+        assertEquals(2, results.size());
+
+    }
+
 }

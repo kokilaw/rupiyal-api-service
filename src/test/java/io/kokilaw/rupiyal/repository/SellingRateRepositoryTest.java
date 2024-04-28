@@ -1,6 +1,7 @@
 package io.kokilaw.rupiyal.repository;
 
 import io.kokilaw.rupiyal.repository.model.BankEntity;
+import io.kokilaw.rupiyal.repository.model.BuyingRateEntity;
 import io.kokilaw.rupiyal.repository.model.SellingRateEntity;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -83,6 +84,19 @@ class SellingRateRepositoryTest {
         Optional<SellingRateEntity> usdEntry = entries.stream().filter(buyingRateEntity -> "USD".equals(buyingRateEntity.getCurrencyCode())).findAny();
         assertEquals(Boolean.TRUE, usdEntry.isPresent());
         usdEntry.ifPresent(sellingRateEntity -> assertEquals("308.5410", usdEntry.get().getRate().toPlainString()));
+    }
+
+    @Test
+    @DisplayName("Given multiple rates over multiple period, latest rates are fetched over given period")
+    @Sql({"/test-data/selling-rate-repository-test-data-2.sql"})
+    void givenMultipleRatesOverMultipleData_whenLatestRatesAreQueried_latestRatesAreFetchedOverGivenPeriod() {
+        List<SellingRateEntity> allEntries = sellingRateRepository.findAll();
+        assertEquals(8, allEntries.size());
+
+        List<SellingRateEntity> results = sellingRateRepository
+                .getRatesForCurrencyAndPeriod("USD", LocalDate.parse("2023-07-20"), LocalDate.parse("2023-07-21"));
+        assertEquals(2, results.size());
+
     }
 
 }

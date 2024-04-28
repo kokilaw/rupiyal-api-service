@@ -24,6 +24,6 @@ public interface BuyingRateRepository extends JpaRepository<BuyingRateEntity, Lo
     @Query(value = "SELECT DISTINCT ON (bank_code, currency_code) * FROM buying_rate ORDER BY bank_code, currency_code, created_at DESC", nativeQuery = true)
     List<BuyingRateEntity> getLatestEntriesGroupedByBankCodeAndCurrencyCode();
 
-    @Query(value = "SELECT DISTINCT ON (bank_code, currency_code, date) * FROM buying_rate where currency_code = ?1 AND date BETWEEN ?2 AND ?3 ORDER BY bank_code, currency_code, date, created_at DESC", nativeQuery = true)
+    @Query(value = "SELECT DISTINCT ON (bank_code, currency_code, date) id,currency_code,rate,date,created_at,updated_at,bank_code FROM buying_rate where currency_code = ?1 AND date BETWEEN ?2 AND ?3 ORDER BY bank_code, currency_code, date, created_at DESC", nativeQuery = true)
     List<BuyingRateEntity> getRatesForCurrencyAndPeriod(String currencyCode, LocalDate fromDate, LocalDate currentDate);
 }
