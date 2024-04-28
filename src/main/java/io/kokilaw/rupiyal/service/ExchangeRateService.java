@@ -15,11 +15,9 @@ import java.util.Map;
 public interface ExchangeRateService {
 
     void saveCurrencyRates(ExchangeRateType exchangeRateType, List<ExchangeRateDTO> currencyRates);
-
     DateExchangeRatesSummaryDTO getCurrencyRatesForTheDate(LocalDate date);
     DateExchangeRatesSummaryDTO getLatestCurrencyRates();
-
     Map<String, List<ExtendedRateEntryDTO>> getBuyingRates(String currencyCode, int lastNumberOfDays);
-
     Map<String, List<ExtendedRateEntryDTO>> getSellingRates(String currencyCode, int lastNumberOfDays);
+
 }
