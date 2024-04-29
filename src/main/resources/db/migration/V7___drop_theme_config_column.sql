@@ -1,0 +1,1 @@
+ALTER TABLE bank DROP COLUMN theme_config;

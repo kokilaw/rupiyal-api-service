@@ -40,9 +40,4 @@ public class BankEntity {
     @Builder.Default
     private Map<String, String> logo = new HashMap<>();
 
-    @Column(name="theme_config")
-    @Type(JsonType.class)
-    @Builder.Default
-    private Map<String, String> themeConfig = new HashMap<>();
-
 }
