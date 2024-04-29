@@ -9,6 +9,5 @@ public record BankDTO(
         String bankCode,
         String shortName,
         String longName,
-        Map<String, String> logo,
-        Map<String, String> themeConfig) {
+        Map<String, String> logo) {
 }
