@@ -106,7 +106,7 @@ public class ExchangeRatesAPIClientImpl implements ExchangeRatesAPIClient {
                 .filter(tempRate -> StringUtils.isNotEmpty(tempRate.rate()) && !tempRate.rate().contains("-"))
                 .map(tempRate -> new ExchangeRateDTO(
                         targetDate,
-                        new BigDecimal(tempRate.rate()),
+                        new BigDecimal(io.kokilaw.rupiyal.utils.StringUtils.sanitizeString(tempRate.rate())),
                         tempRate.currencyCode(),
                         tempRate.bankCode(),
                         entryCreationTime,
