@@ -1,6 +1,5 @@
 package io.kokilaw.rupiyal.processor.impl;
 
-import io.kokilaw.rupiyal.Constants;
 import io.kokilaw.rupiyal.client.ExchangeRatesAPIClient;
 import io.kokilaw.rupiyal.dto.ExchangeRateDTO;
 import io.kokilaw.rupiyal.dto.ExchangeRateType;
@@ -13,11 +12,13 @@ import io.kokilaw.rupiyal.utils.DateUtils;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by kokilaw on 2023-06-13
@@ -29,6 +30,7 @@ public class GoogleSheetAPIProcessor implements ExchangeRatesFetchProcessor {
     private final ExchangeRatesFetchProcessorRegistry exchangeRatesFetchProcessorRegistry;
     private final ExchangeRateService exchangeRateService;
     private final ExchangeRatesAPIClient exchangeRatesAPIClient;
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     @Autowired
     public GoogleSheetAPIProcessor(
@@ -45,14 +47,16 @@ public class GoogleSheetAPIProcessor implements ExchangeRatesFetchProcessor {
         return ProcessorType.GOOGLE_SHEET_API;
     }
 
+    @Async
     @Override
-    @CacheEvict(value = Constants.CacheKeys.LATEST_RATES_SUMMARY, allEntries = true)
     public void execute(FetchTaskDTO taskDTO) {
-        if (isLatestRatesFetchTask(taskDTO)) {
-            executeLatestRatesFetchTask();
-        } else {
-            executeRatesFetchTaskForSpecificPeriod(taskDTO.fromDate(), taskDTO.toDate());
-        }
+        executorService.execute(() -> {
+            if (isLatestRatesFetchTask(taskDTO)) {
+                executeLatestRatesFetchTask();
+            } else {
+                executeRatesFetchTaskForSpecificPeriod(taskDTO.fromDate(), taskDTO.toDate());
+            }
+        });
     }
 
     private void executeRatesFetchTaskForSpecificPeriod(LocalDate fromDate, LocalDate toDate) {
