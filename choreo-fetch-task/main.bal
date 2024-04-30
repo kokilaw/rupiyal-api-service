@@ -10,7 +10,7 @@ public function main() returns error? {
     io:println("Core API URL: " + coreApiUrl);
     http:Client coreApiClient = check new (coreApiUrl);
 
-    FetchResponse fetchResponse = check coreApiClient->/internal/tasks/fetch.post({
+    json fetchResponse = <json> check coreApiClient->/internal/tasks/fetch.post({
         "processorType": "GOOGLE_SHEET_API"
     });
     io:println("Fetch response: " + fetchResponse.toJsonString());

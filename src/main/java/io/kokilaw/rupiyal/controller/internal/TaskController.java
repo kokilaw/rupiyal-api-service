@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 /**
  * Created by kokilaw on 2023-06-13
  */
@@ -28,12 +30,12 @@ public class TaskController {
     }
 
     @PostMapping("/fetch")
-    public ResponseEntity<Void> executeFetchTask(@RequestBody FetchTaskDTO taskDTO) {
+    public ResponseEntity<Map<String, String>> executeFetchTask(@RequestBody FetchTaskDTO taskDTO) {
         log.info("Fetch task received - [{}]", taskDTO);
         exchangeRatesFetchProcessorRegistry.currencyFetchProcessor(taskDTO.processorType())
                 .execute(taskDTO);
         log.info("Fetch task submitted for execution - [{}]", taskDTO);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(Map.of("submitted", "true"), HttpStatus.OK);
     }
 
 }
